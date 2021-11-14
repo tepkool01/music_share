@@ -14,9 +14,9 @@ const io = new Server(server);
 
 // Socket handlers [imports]-- files that are used as 'listeners' for data from the client (front-end javascript)
 // these socket handlers respond back to the client application in real time, as the client is listening
-const registerInitHandlers = require('./socket_handlers/initHandler');
-const registerRoomHandlers = require('./socket_handlers/roomHandler');
-const registerSongHandlers = require('./socket_handlers/songHandler');
+const registerInitHandlers = require('../socket_handlers/initHandler');
+const registerRoomHandlers = require('../socket_handlers/roomHandler');
+const registerSongHandlers = require('../socket_handlers/songHandler');
 
 
 // Socket events

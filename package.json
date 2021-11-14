@@ -2,15 +2,17 @@
   "name": "music_share",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/socket_server.js",
   "scripts": {
-    "app": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "svelte-kit dev",
+    "build": "svelte-kit build",
+    "preview": "svelte-kit preview"
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "express": "^4.17.1",
-    "socket.io": "^4.3.2"
-  }
+  "devDependencies": {
+    "@sveltejs/kit": "next",
+    "svelte": "^3.34.0"
+  },
+  "type": "module"
 }
