@@ -12,7 +12,8 @@
   "license": "ISC",
   "devDependencies": {
     "@sveltejs/kit": "next",
-    "svelte": "^3.34.0"
+    "svelte": "^3.34.0",
+    "express": "^4.17.1"
   },
   "type": "module"
 }
