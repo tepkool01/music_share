@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>Music Sync</title>
     <script src="socket.io/socket.io.js"></script>
     <link type="text/css" rel="stylesheet" href="styles.css">
 </head>
@@ -65,6 +66,8 @@
     }
     function changeSong() {
     	console.log(">>changeSong() -- client changing song");
+		audio.setAttribute('src', 'https://archive.org/download/calexico2006-12-02..flac16/calexico2006-12-02d1t02.mp3');
+		audio.play();
         socket.emit('song:change', {
         	'room': localStorage.getItem('room'),
         	'song': 'https://archive.org/download/calexico2006-12-02..flac16/calexico2006-12-02d1t02.mp3'
