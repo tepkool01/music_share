@@ -19,16 +19,12 @@ const registerRoomHandlers = require('./socket_handlers/roomHandler');
 const registerSongHandlers = require('./socket_handlers/songHandler');
 const registerKingHandlers = require('./socket_handlers/kingHandler');
 
-
-
 // Socket events
 io.on('connection', (socket) => {
-	console.log("connectasdf");
+	console.log("connect");
 	registerInitHandlers(io, socket); // user connect, disconnect, etc
-
 	registerRoomHandlers(io, socket); // user changes a room
 	registerSongHandlers(io, socket); // user changes a song
-
 	registerKingHandlers(io, socket);
 });
 

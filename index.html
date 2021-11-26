@@ -45,8 +45,10 @@
     <div class="todo-space">
         <!-- https://codepen.io/craigstroman/pen/aOyRYx -->
         <div class="room">
-            <h4>Currently in room:</h4>
-            <span id="roomID"></span>
+            <div>
+                <span>Currently in room:</span>
+                <span id="roomText"></span>
+            </div>
             <label for="room">Room</label><input id="room" />
             <button onclick="roomChange()">Join Room</button>
         </div>
@@ -60,8 +62,11 @@
     // Stage 1, collect room location
     function roomChange() {
     	let roomID = document.getElementById('room');
-    	console.log("Room changed", roomID.value);
-        socket.emit('room:change', roomID.value);
+		let roomText = document.getElementById('roomText');
+
+		console.log("roomChange()", roomID.value);
+		socket.emit('room:change', roomID.value);
+		roomText.innerText = roomID.value;
         localStorage.setItem('room', roomID.value); // todo: security
     }
     function changeSong() {
@@ -73,6 +78,16 @@
         	'song': 'https://archive.org/download/calexico2006-12-02..flac16/calexico2006-12-02d1t02.mp3'
 		});
     }
+	function pauseSong() {
+		console.log(">>pauseSong() -- client pausing song");
+		audio.pause();
+		socket.emit('song:pause', {'room': localStorage.getItem('room')});
+	}
+	function playSong() {
+		console.log(">>playSong() -- client playing song");
+		audio.play();
+		socket.emit('song:play', {'room': localStorage.getItem('room')});
+	}
     function changeKing() {
         console.log(">>changeKing() -- client changing king");
         socket.emit('king:change', playerData.isKing);
@@ -97,21 +112,30 @@
 	// Received: Socket connection events
 	let socket = io();
 
+	// Receiving messages from the king
     socket.on('broadcasted:song:change', function(msg) {
         console.log("Song change notification", msg);
         audio.setAttribute('src', 'https://archive.org/download/calexico2006-12-02..flac16/calexico2006-12-02d1t02.mp3');
         audio.play();
     });
+	socket.on('broadcasted:song:pause', function(msg) {
+		console.log("Song pause notification", msg);
+		audio.pause();
+	});
+	socket.on('broadcasted:song:play', function(msg) {
+		console.log("Song play", msg);
+		audio.play();
+	});
 
     // Handles playing and adds/removes icons to represent state
     togglePlay = () => {
         if (playerData.isPlaying) {
-            audio.pause();
+            pauseSong();
             playerData.isPlaying = false;
             playerIcon.classList.remove("fa-play");
             playerIcon.classList.add("fa-pause");
         } else {
-            audio.play();
+            playSong();
             playerData.isPlaying = true;
             playerIcon.classList.add("fa-play");
             playerIcon.classList.remove("fa-pause");
@@ -139,10 +163,10 @@
     }
 
     // Resetting current time and changing icons to match state
-    audio.onplay = () => {
-        console.log("playing");
-        audio.currentTime = 0;
-    };
+    // audio.onplay = () => {
+    //     console.log("playing");
+    //     audio.currentTime = 0;
+    // };
 
 	// Send time updates to listeners
     audio.ontimeupdate = () => {
