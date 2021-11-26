@@ -21,12 +21,12 @@
         </header>
         <!-- Progress Controller -->
         <div class="control">
-            <div class="btn btn-toggle-control" onclick="toggleKing()">
-                <i class="fas fa-crown" id="icon-king"></i>
+            <div class="btn btn-back" onclick="togglePrevious()">
+                <i class="fas fa-step-backward" id="icon-previous"></i>
             </div>
 
             <div class="btn btn-toggle-play" onclick="togglePlay()">
-                <i class="fas fa-pause" id="icon-play"></i>
+                <i class="fas fa-play" id="icon-play"></i>
             </div>
 <!--            <div class="btn btn-next" onclick="changeSong()">-->
             <div class="btn btn-next" onclick="toggleNext()">
@@ -55,6 +55,10 @@
 
         <h4>Current time:</h4>
         <span id="currentTime">0</span>
+
+        <div class="btn btn-toggle-control" onclick="toggleKing()">
+            <i class="fas fa-crown" id="icon-king"></i>
+        </div>
     </div>
 </div>
 
@@ -108,7 +112,8 @@
     // Control icons
     let playerIcon = document.getElementById('icon-play');
     let kingIcon = document.getElementById('icon-king');
-    let nextIcon = document.getElementById('icon-next')
+    let nextIcon = document.getElementById('icon-next');
+    let previousIcon = document.getElementById('icon-previous');
 	// Received: Socket connection events
 	let socket = io();
 
@@ -132,13 +137,13 @@
         if (playerData.isPlaying) {
             pauseSong();
             playerData.isPlaying = false;
-            playerIcon.classList.remove("fa-play");
-            playerIcon.classList.add("fa-pause");
+            playerIcon.classList.remove("fa-pause");
+            playerIcon.classList.add("fa-play");
         } else {
             playSong();
             playerData.isPlaying = true;
-            playerIcon.classList.add("fa-play");
-            playerIcon.classList.remove("fa-pause");
+            playerIcon.classList.add("fa-pause");
+            playerIcon.classList.remove("fa-play");
         }
     }
 
@@ -160,6 +165,12 @@
     toggleNext = () => {
         changeSong();
         clickAnimation(nextIcon, 'var(--color-darkyellow', 'var(--color-icon') ;
+    }
+
+    // Handles next song, calling change functionality and updating icon
+    togglePrevious = () => {
+        changeSong();
+        clickAnimation(previousIcon, 'var(--color-darkyellow', 'var(--color-icon') ;
     }
 
     // Resetting current time and changing icons to match state
