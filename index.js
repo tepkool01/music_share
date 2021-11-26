@@ -33,14 +33,9 @@ io.on('connection', (socket) => {
 });
 
 // Static Routes
+app.use(express.static(__dirname + '/public'));
 app.get('/', function(req, res) {
 	res.sendFile(path.join(__dirname, '/index.html'));
-});
-app.get('/socket.io/socket.io.js', function(req, res) {
-	res.sendFile(path.join(__dirname, '/socket.io/socket.io.js'));
-});
-app.get('/music.mp3', function(req, res) {
-	res.sendFile(path.join(__dirname, '/music.mp3'));
 });
 
 // Start server
