@@ -21,12 +21,12 @@
         </header>
         <!-- Progress Controller -->
         <div class="control">
-            <div class="btn btn-back" onclick="togglePrevious()">
-                <i class="fas fa-step-backward" id="icon-previous"></i>
+            <div class="btn btn-toggle-control" onclick="toggleKing()">
+                <i class="fas fa-crown" id="icon-king"></i>
             </div>
 
             <div class="btn btn-toggle-play" onclick="togglePlay()">
-                <i class="fas fa-play" id="icon-play"></i>
+                <i class="fas fa-pause" id="icon-play"></i>
             </div>
 <!--            <div class="btn btn-next" onclick="changeSong()">-->
             <div class="btn btn-next" onclick="toggleNext()">
@@ -45,20 +45,14 @@
     <div class="todo-space">
         <!-- https://codepen.io/craigstroman/pen/aOyRYx -->
         <div class="room">
-            <div>
-                <span>Currently in room:</span>
-                <span id="roomText"></span>
-            </div>
+            <h4>Currently in room:</h4>
+            <span id="roomID"></span>
             <label for="room">Room</label><input id="room" />
             <button onclick="roomChange()">Join Room</button>
         </div>
 
         <h4>Current time:</h4>
         <span id="currentTime">0</span>
-
-        <div class="btn btn-toggle-control" onclick="toggleKing()">
-            <i class="fas fa-crown" id="icon-king"></i>
-        </div>
     </div>
 </div>
 
@@ -66,11 +60,8 @@
     // Stage 1, collect room location
     function roomChange() {
     	let roomID = document.getElementById('room');
-		let roomText = document.getElementById('roomText');
-
-		console.log("roomChange()", roomID.value);
-		socket.emit('room:change', roomID.value);
-		roomText.innerText = roomID.value;
+    	console.log("Room changed", roomID.value);
+        socket.emit('room:change', roomID.value);
         localStorage.setItem('room', roomID.value); // todo: security
     }
     function changeSong() {
@@ -82,16 +73,6 @@
         	'song': 'https://archive.org/download/calexico2006-12-02..flac16/calexico2006-12-02d1t02.mp3'
 		});
     }
-	function pauseSong(isKing) {
-		console.log(">>pauseSong() -- client pausing song");
-		audio.pause();
-		socket.emit('song:pause', {'room': localStorage.getItem('room')});
-	}
-	function playSong(isKing) {
-		console.log(">>playSong() -- client playing song");
-		audio.play();
-		socket.emit('song:play', {'room': localStorage.getItem('room')});
-	}
     function changeKing() {
         console.log(">>changeKing() -- client changing king");
         socket.emit('king:change', playerData.isKing);
@@ -112,38 +93,28 @@
     // Control icons
     let playerIcon = document.getElementById('icon-play');
     let kingIcon = document.getElementById('icon-king');
-    let nextIcon = document.getElementById('icon-next');
-    let previousIcon = document.getElementById('icon-previous');
+    let nextIcon = document.getElementById('icon-next')
 	// Received: Socket connection events
 	let socket = io();
 
-	// Receiving messages from the king
     socket.on('broadcasted:song:change', function(msg) {
         console.log("Song change notification", msg);
         audio.setAttribute('src', 'https://archive.org/download/calexico2006-12-02..flac16/calexico2006-12-02d1t02.mp3');
         audio.play();
     });
-	socket.on('broadcasted:song:pause', function(msg) {
-		console.log("Song pause notification", msg);
-		audio.pause();
-	});
-	socket.on('broadcasted:song:play', function(msg) {
-		console.log("Song play", msg);
-		audio.play();
-	});
 
     // Handles playing and adds/removes icons to represent state
     togglePlay = () => {
         if (playerData.isPlaying) {
-            pauseSong();
+            audio.pause();
             playerData.isPlaying = false;
-            playerIcon.classList.remove("fa-pause");
-            playerIcon.classList.add("fa-play");
-        } else {
-            playSong();
-            playerData.isPlaying = true;
-            playerIcon.classList.add("fa-pause");
             playerIcon.classList.remove("fa-play");
+            playerIcon.classList.add("fa-pause");
+        } else {
+            audio.play();
+            playerData.isPlaying = true;
+            playerIcon.classList.add("fa-play");
+            playerIcon.classList.remove("fa-pause");
         }
     }
 
@@ -167,17 +138,11 @@
         clickAnimation(nextIcon, 'var(--color-darkyellow', 'var(--color-icon') ;
     }
 
-    // Handles next song, calling change functionality and updating icon
-    togglePrevious = () => {
-        changeSong();
-        clickAnimation(previousIcon, 'var(--color-darkyellow', 'var(--color-icon') ;
-    }
-
     // Resetting current time and changing icons to match state
-    // audio.onplay = () => {
-    //     console.log("playing");
-    //     audio.currentTime = 0;
-    // };
+    audio.onplay = () => {
+        console.log("playing");
+        audio.currentTime = 0;
+    };
 
 	// Send time updates to listeners
     audio.ontimeupdate = () => {
