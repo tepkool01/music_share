@@ -32,15 +32,6 @@
 
     <div class="todo-space">
       <!-- https://codepen.io/craigstroman/pen/aOyRYx -->
-      <div class="room">
-        <div>
-          <span>Currently in room:</span>
-          <span id="roomText"></span>
-        </div>
-        <label for="room">Room</label><input id="room" />
-        <button onclick="roomChange()">Join Room</button>
-      </div>
-
       <h4>Current time:</h4>
       <span id="currentTime">0</span>
 
