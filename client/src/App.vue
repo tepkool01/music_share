@@ -7,18 +7,11 @@
 <script>
 import Header from './components/Header.vue';
 import Footer from './components/Footer.vue';
-import Button from './components/Button.vue';
 
 export default {
   components: {
     Header,
-    Footer,
-    Button
-  },
-  methods: {
-    consoleClick() {
-      console.log('Button clicked')
-    }
+    Footer
   }
 }
 </script>
