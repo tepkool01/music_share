@@ -1,7 +1,6 @@
 <template>
   <Header />
   <router-view></router-view>
-  <button :onClick="consoleClick">Custom</v-button>
   <Footer />
 </template>
 
