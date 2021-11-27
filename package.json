@@ -1,16 +1,23 @@
 {
   "name": "music_share",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
+  "repository": "git@github.com:/tepkool01/music_share.git",
+  "author": "Michael Young <mvy1221@gmail.com>",
+  "license": "MIT",
   "scripts": {
-    "app": "nodemon index.js",
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1",
-    "socket.io": "^4.3.2"
+    "socket.io": "^4.4.0",
+    "vue": "^3.2.23",
+    "vue-router": "^4.0.12"
+  },
+  "devDependencies": {
+    "@vue/cli-service": "^4.5.15",
+    "@vue/compiler-sfc": "^3.2.23"
   }
 }

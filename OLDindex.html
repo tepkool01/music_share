@@ -82,12 +82,12 @@
         	'song': 'https://archive.org/download/calexico2006-12-02..flac16/calexico2006-12-02d1t02.mp3'
 		});
     }
-	function pauseSong() {
+	function pauseSong(isKing) {
 		console.log(">>pauseSong() -- client pausing song");
 		audio.pause();
 		socket.emit('song:pause', {'room': localStorage.getItem('room')});
 	}
-	function playSong() {
+	function playSong(isKing) {
 		console.log(">>playSong() -- client playing song");
 		audio.play();
 		socket.emit('song:play', {'room': localStorage.getItem('room')});
