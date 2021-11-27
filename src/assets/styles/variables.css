@@ -1,0 +1,26 @@
+:root {
+    --color-darkblue: hsl(225, 40%, 18%);
+    --color-lightblue: hsl(213, 30%, 32%);
+    --color-darkyellow: hsl(31, 50%, 66%);
+    --color-lightyellow: hsl(37, 72%, 78%);
+    --color-neutral-100: hsl(0, 0%, 100%);
+    --color-neutral-90: hsl(0, 0%, 90%);
+    --color-neutral-40: hsl(0, 0%, 40%);
+    --color-neutral-20: hsl(0, 0%, 20%);
+
+    --color-grey: var(--color-neutral-90);
+    --color-white: var(--color-neutral-100);
+    --color-text: var(--color-neutral-40);
+    --color-icon: var(--color-neutral-20);
+
+    --spacing-01: 0.25rem;
+    --spacing-02: 0.50rem;
+    --spacing-03: 1rem;
+    --spacing-04: 2rem;
+    --spacing-05: 3rem;
+    --font-size-xs: 0.707rem;
+    --font-size-s: 1.414rem;
+    --font-size-m: 1.999rem;
+    --font-size-l: 2.827rem;
+    --font-size-xl: 3.998rem;
+}

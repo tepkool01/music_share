@@ -1,7 +1,7 @@
 <template>
   <div class="room">
     <div>
-      <span>Currently in room:</span>
+      <h4>Currently in room:</h4>
       <span id="roomText"></span>
     </div>
     <label for="room">Room</label><input id="room" />
