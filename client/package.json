@@ -6,7 +6,7 @@
   "author": "Michael Young <mvy1221@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "serve": "vue-cli-service serve && node musicServer.js",
+    "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "test": "echo \"Error: no test specified\" && exit 1"
