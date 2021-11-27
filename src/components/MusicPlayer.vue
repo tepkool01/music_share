@@ -47,86 +47,62 @@
 </script>
 
 <style scoped>
-:root {
-  --color-darkblue: hsl(225, 40%, 18%);
-  --color-lightblue: hsl(213, 30%, 32%);
-  --color-grey: hsl(0, 0%, 96%);
-  --color-white: hsl(0, 0%, 100%);
-  --color-text: hsl(0, 0%, 20%);
-  --color-darkyellow: hsl(31, 50%, 66%);
-  --color-lightyellow: hsl(37, 72%, 78%);
-  --color-icon: hsl(0, 0%, 40%)
-}
-
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: inherit;
-}
-
-body {
-  background-color: var(--color-grey);
-}
-
-html {
-  box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
-}
-
 .player {
-  max-width: 480px;
-  margin: 0 auto;
+  min-width: 95vw;
   background-color: var(--color-white);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 
 .dashboard {
-  padding: 16px 16px 14px;
+  padding: var(--spacing-03) var(--spacing-03);
   background-color: var(--color-white);
   width: 100%;
-  max-width: 480px;
+  max-width: 90vw;
   border-bottom: 1px solid var(--color-grey);
 }
 
-/* HEADER */
+/* Music player data (song title) */
 header {
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: var(--spacing-02);
 }
 
 header h4 {
   color: var(--color-darkyellow);
-  font-size: 12px;
+  font-size: var(--font-size-s);
 }
 
 header h2 {
   color: var(--color-text);
-  font-size: 20px;
+  font-size: var(--font-size-l);
 }
 
+/* Player controls section*/
 .control {
   display: flex;
   align-items: center;
   justify-content: space-around;
-  padding: 18px 0 8px 0;
+  padding: var(--spacing-04) 0 var(--spacing-04) 0;
 }
 
 .control .btn {
   color: var(--color-icon);
   padding: 18px;
-  font-size: 18px;
+  font-size: var(--font-size-xl);
 }
 
-/* TODO: JS logic to toggle the button's state to active*/
 .control .btn.active {
   color: var(--color-lightyellow);
 }
 
 .control .btn-toggle-play {
-  width: 56px;
-  height: 56px;
+  width: calc(var(--font-size-xl)*2.333);
+  height: calc(var(--font-size-xl)*2.333);
   border-radius: 50%;
-  font-size: 24px;
-  color: #fff;
+  font-size: var(--font-size-xl);
+  color: var(--color-white);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -136,7 +112,7 @@ header h2 {
 .progress {
   width: 100%;
   -webkit-appearance: none;
-  height: 6px;
+  height: var(--spacing-03);
   background: #d3d3d3;
   outline: none;
   opacity: 0.7;
@@ -147,32 +123,9 @@ header h2 {
 .progress::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 12px;
-  height: 6px;
+  width: var(--spacing-02);
+  height: var(--spacing-03);
   background-color: var(--color-lightblue);
   cursor: pointer;
-}
-
-/* Hodgepodge CSS zone */
-button {
-  border: none;
-  padding: 1em;
-  border-radius: 8px;
-  transition:
-      background-color 400ms ease,
-      color 400ms ease;
-  background-color: #c9c9c9;
-  color: #222222;
-}
-
-input {
-  border-width: 0 0 1px 0;
-  background: none;
-  outline: none;
-  margin: 0 4px;
-}
-
-.todo-space {
-  padding: 16px 16px 14px;
 }
 </style>

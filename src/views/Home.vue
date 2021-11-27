@@ -1,6 +1,7 @@
 <template>
-  <RoomSelector />
-  <MusicPlayer />
+  <div class="container">
+    <MusicPlayer />
+  </div>
 </template>
 
 <script>
@@ -10,8 +11,16 @@ import RoomSelector from '../components/RoomSelector'
 export default {
   name: 'Home',
   components: {
-    MusicPlayer,
-    RoomSelector,
+    MusicPlayer
   }
 }
 </script>
+
+<style scoped>
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>
