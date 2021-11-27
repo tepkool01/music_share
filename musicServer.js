@@ -1,15 +1,12 @@
-const express = require('express');
-const path = require('path');
 const os = require('os');
 const http = require('http');
 const { Server } = require("socket.io");
 
 // Create express and port
-const app = express();
 const port = process.env.PORT || 3333;
 
 // Web Socket / Long polling with socket.io
-const server = http.createServer(app);
+const server = http.createServer();
 const io = new Server(server);
 
 // Socket handlers [imports]-- files that are used as 'listeners' for data from the client (front-end javascript)
@@ -29,10 +26,10 @@ io.on('connection', (socket) => {
 });
 
 // Static Routes
-app.use(express.static(__dirname + '/public'));
-app.get('/', function(req, res) {
-	res.sendFile(path.join(__dirname, '/index.html'));
-});
+// app.use(express.static(__dirname + '/public'));
+// app.get('/', function(req, res) {
+// 	res.sendFile(path.join(__dirname, '/index.html'));
+// });
 
 // Start server
 server.listen(port, () => {

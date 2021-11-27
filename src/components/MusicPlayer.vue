@@ -43,7 +43,47 @@
 </template>
 
 <script>
+export default {
+  name: 'MusicPlayer',
+  data() {
+    return {
+      socket: {},
+      currentTime: 0,
+      isPlaying: false,
+      songs: [
+        {name: '', URL: ''},
+        {name: '', URL: ''},
+      ]
+    }
+  },
+  methods: {
+    initPlayer() {
+      // this.$vueSocketIo.emit('song:change', '')
+      // this.socket.emit('song:pause', '')
+    },
+    togglePlay() {
 
+    },
+    play() {
+
+    },
+    pause() {
+      // console.log(">>pauseSong() -- client pausing song");
+      // audio.pause();
+      // socket.emit('song:pause', {'room': localStorage.getItem('room')});
+      //
+      // function playSong(isKing) {
+      //   console.log(">>playSong() -- client playing song");
+      //   audio.play();
+      //   socket.emit('song:play', {'room': localStorage.getItem('room')});
+      // }
+    }
+  },
+  created() {
+    // this.socket = io()
+    this.initPlayer();
+  }
+}
 </script>
 
 <style scoped>
