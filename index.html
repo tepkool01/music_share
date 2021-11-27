@@ -6,62 +6,53 @@
     <link type="text/css" rel="stylesheet" href="styles.css">
 </head>
 <body>
+<h1>Music</h1>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
-<div class="container">
-    <div class="player">
-        <!-- Dashboard -->
-        <div class="dashboard">
-            <!-- Header -->
-            <header>
-                <h4>Currently playing:</h4>
-                <h2>{ SongTitle }</h2>
-            </header>
-            <!-- Progress Controller -->
-            <div class="control">
-                <div class="btn btn-back" onclick="togglePrevious()">
-                    <i class="fas fa-step-backward" id="icon-previous"></i>
-                </div>
-
-                <div class="btn btn-toggle-play" onclick="togglePlay()">
-                    <i class="fas fa-play" id="icon-play"></i>
-                </div>
-                <!--            <div class="btn btn-next" onclick="changeSong()">-->
-                <div class="btn btn-next" onclick="toggleNext()">
-                    <i class="fas fa-step-forward" id="icon-next"></i>
-                </div>
+<div class="player">
+    <!-- Dashboard -->
+    <div class="dashboard">
+        <!-- Header -->
+        <header>
+            <h4>Currently playing:</h4>
+            <h2>{ SongTitle }</h2>
+        </header>
+        <!-- Progress Controller -->
+        <div class="control">
+            <div class="btn btn-toggle-control" onclick="toggleKing()">
+                <i class="fas fa-crown" id="icon-king"></i>
             </div>
 
-            <input id="progress" class="progress" type="range" value="0" step="1" min="0" max="100" />
-
-            <audio id="audio" preload="none" tabindex="0">
-                <source src="music.mp3" data-track-number="1" />
-                <source src="https://archive.org/download/calexico2006-12-02..flac16/calexico2006-12-02d1t02.mp3" data-track-number="2" />
-            </audio>
-        </div>
-
-        <div class="todo-space">
-            <!-- https://codepen.io/craigstroman/pen/aOyRYx -->
-            <div class="room-info">
-                <h4>Currently in room:</h4>
-                <span id="roomID"></span>
-                <label for="room">Room</label><input id="room" />
-                <button onclick="roomChange()">Join Room</button>
+            <div class="btn btn-toggle-play" onclick="togglePlay()">
+                <i class="fas fa-pause" id="icon-play"></i>
             </div>
-
-            <div class="current-time-info">
-                <h4>Current time:</h4>
-                <span id="currentTime">0</span>
-            </div>
-
-            <div class="king-toggle">
-                <div class="btn btn-toggle-control" onclick="toggleKing()">
-                    <i class="fas fa-crown" id="icon-king"></i>
-                </div>
+<!--            <div class="btn btn-next" onclick="changeSong()">-->
+            <div class="btn btn-next" onclick="toggleNext()">
+            <i class="fas fa-step-forward" id="icon-next"></i>
             </div>
         </div>
+
+        <input id="progress" class="progress" type="range" value="0" step="1" min="0" max="100" />
+
+        <audio id="audio" preload="none" tabindex="0">
+            <source src="music.mp3" data-track-number="1" />
+            <source src="https://archive.org/download/calexico2006-12-02..flac16/calexico2006-12-02d1t02.mp3" data-track-number="2" />
+        </audio>
+    </div>
+
+    <div class="todo-space">
+        <!-- https://codepen.io/craigstroman/pen/aOyRYx -->
+        <div class="room">
+            <h4>Currently in room:</h4>
+            <span id="roomID"></span>
+            <label for="room">Room</label><input id="room" />
+            <button onclick="roomChange()">Join Room</button>
+        </div>
+
+        <h4>Current time:</h4>
+        <span id="currentTime">0</span>
     </div>
 </div>
 
@@ -102,8 +93,7 @@
     // Control icons
     let playerIcon = document.getElementById('icon-play');
     let kingIcon = document.getElementById('icon-king');
-    let nextIcon = document.getElementById('icon-next');
-    let previousIcon = document.getElementById('icon-previous');
+    let nextIcon = document.getElementById('icon-next')
 	// Received: Socket connection events
 	let socket = io();
 
@@ -118,13 +108,13 @@
         if (playerData.isPlaying) {
             audio.pause();
             playerData.isPlaying = false;
-            playerIcon.classList.remove("fa-pause");
-            playerIcon.classList.add("fa-play");
+            playerIcon.classList.remove("fa-play");
+            playerIcon.classList.add("fa-pause");
         } else {
             audio.play();
             playerData.isPlaying = true;
-            playerIcon.classList.add("fa-pause");
-            playerIcon.classList.remove("fa-play");
+            playerIcon.classList.add("fa-play");
+            playerIcon.classList.remove("fa-pause");
         }
     }
 
@@ -146,12 +136,6 @@
     toggleNext = () => {
         changeSong();
         clickAnimation(nextIcon, 'var(--color-darkyellow', 'var(--color-icon') ;
-    }
-
-    // Handles next song, calling change functionality and updating icon
-    togglePrevious = () => {
-        changeSong();
-        clickAnimation(previousIcon, 'var(--color-darkyellow', 'var(--color-icon') ;
     }
 
     // Resetting current time and changing icons to match state
