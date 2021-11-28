@@ -12,10 +12,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "socket.io": "^4.4.0",
     "vue": "^3.2.23",
-    "vue-router": "^4.0.12",
-    "vue-socket.io": "^3.0.10"
+    "vue-3-socket.io": "^1.0.4",
+    "vue-router": "^4.0.12"
   },
   "devDependencies": {
     "@vue/cli-service": "^4.5.15",
