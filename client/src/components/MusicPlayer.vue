@@ -9,17 +9,23 @@
       </header>
       <!-- Progress Controller -->
       <div class="control">
-        <div class="btn btn-back" onclick="togglePrevious()">
-          <i class="fas fa-step-backward" id="icon-previous"></i>
-        </div>
+        <Button class="btn btn-back" @click="back(); toggleClass('app', 'flashing');" id="back">
+          <icon-base icon-name="backwards">
+            <icon-backwards></icon-backwards>
+          </icon-base>
+        </Button>
 
-        <div class="btn btn-toggle-play" onclick="togglePlay()">
-          <i class="fas fa-play" id="icon-play"></i>
-        </div>
-        <!--            <div class="btn btn-next" onclick="changeSong()">-->
-        <div class="btn btn-next" onclick="toggleNext()">
-          <i class="fas fa-step-forward" id="icon-next"></i>
-        </div>
+        <Button class="btn btn-toggle-play" @click="togglePlay()">
+          <icon-base icon-name="play">
+            <icon-play></icon-play>
+          </icon-base>
+        </Button>
+
+        <Button class="btn btn-next" @click="next()">
+          <icon-base icon-name="forwards">
+            <icon-forwards></icon-forwards>
+          </icon-base>
+        </Button>
       </div>
 
       <input id="progress" class="progress" type="range" value="0" step="1" min="0" max="100" />
@@ -43,6 +49,11 @@
 </template>
 
 <script>
+import Button from "@/components/Button";
+import IconBase from "@/components/IconBase";
+import IconBackwards from "@/components/icons/IconBackwards";
+import IconPlay from "@/components/icons/IconPlay";
+import IconForwards from "@/components/icons/IconForwards";
 export default {
   name: 'MusicPlayer',
   data() {
@@ -56,18 +67,26 @@ export default {
       ]
     }
   },
+  components: {
+    IconForwards,
+    IconPlay,
+    IconBackwards,
+    IconBase,
+    Button
+  },
   methods: {
     initPlayer() {
       // this.$vueSocketIo.emit('song:change', '')
       // this.socket.emit('song:pause', '')
     },
     togglePlay() {
-
+      console.log('> Play/Pause toggled');
     },
     play() {
-
+      console.log('> Playing');
     },
     pause() {
+      console.log('> Pausing');
       // console.log(">>pauseSong() -- client pausing song");
       // audio.pause();
       // socket.emit('song:pause', {'room': localStorage.getItem('room')});
@@ -77,6 +96,12 @@ export default {
       //   audio.play();
       //   socket.emit('song:play', {'room': localStorage.getItem('room')});
       // }
+    },
+    next() {
+      console.log('> Next');
+    },
+    back() {
+      console.log('> Back');
     }
   },
   created() {
@@ -87,6 +112,7 @@ export default {
 </script>
 
 <style scoped>
+
 .player {
   min-width: 95vw;
   background-color: var(--color-white);
