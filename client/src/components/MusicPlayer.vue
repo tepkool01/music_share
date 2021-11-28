@@ -30,7 +30,7 @@
 
       <input id="progress" class="progress" type="range" value="0" step="1" min="0" max="100" />
 
-      <audio id="audio" preload="none" tabindex="0">
+      <audio ref="audio" id="audio" preload="none" tabindex="0">
         <source src="music.mp3" data-track-number="1" />
         <source src="https://archive.org/download/calexico2006-12-02..flac16/calexico2006-12-02d1t02.mp3" data-track-number="2" />
       </audio>
@@ -76,26 +76,24 @@ export default {
   },
   methods: {
     initPlayer() {
-      // this.$vueSocketIo.emit('song:change', '')
-      // this.socket.emit('song:pause', '')
     },
     togglePlay() {
       console.log('> Play/Pause toggled');
+      if (this.isPlaying) {
+        this.pause()
+      } else {
+        this.play() // todo, promise/await?
+        this.isPlaying = true
+      }
     },
     play() {
       console.log('> Playing');
+      this.$socket.emit('song:play', {'room': localStorage.getItem('room')}) // todo: replace with state
+      this.$refs.audio.play()
     },
     pause() {
       console.log('> Pausing');
-      // console.log(">>pauseSong() -- client pausing song");
-      // audio.pause();
-      // socket.emit('song:pause', {'room': localStorage.getItem('room')});
-      //
-      // function playSong(isKing) {
-      //   console.log(">>playSong() -- client playing song");
-      //   audio.play();
-      //   socket.emit('song:play', {'room': localStorage.getItem('room')});
-      // }
+      this.$socket.emit('song:pause', {'room': localStorage.getItem('room')})
     },
     next() {
       console.log('> Next');
