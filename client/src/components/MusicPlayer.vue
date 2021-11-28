@@ -9,14 +9,14 @@
       </header>
       <!-- Progress Controller -->
       <div class="control">
-        <Button class="btn btn-back" @click="back()">
+        <Button class="btn btn-back" @click="back(); toggleClass('app', 'flashing');" id="back">
           <icon-base icon-name="backwards">
             <icon-backwards></icon-backwards>
           </icon-base>
         </Button>
 
         <Button class="btn btn-toggle-play" @click="togglePlay()">
-          <icon-base icon-name="play" class="btn btn-toggle-play">
+          <icon-base icon-name="play">
             <icon-play></icon-play>
           </icon-base>
         </Button>
@@ -112,6 +112,7 @@ export default {
 </script>
 
 <style scoped>
+
 .player {
   min-width: 95vw;
   background-color: var(--color-white);
@@ -150,28 +151,6 @@ header h2 {
   align-items: center;
   justify-content: space-around;
   padding: var(--spacing-04) 0 var(--spacing-04) 0;
-}
-
-.button-icon {
-  color: var(--color-icon);
-  padding: 18px;
-  font-size: var(--font-size-xl);
-}
-
-.button-icon.active {
-  color: var(--color-lightyellow);
-}
-
-.button-icon-toggle-play {
-  width: calc(var(--font-size-xl)*2.333);
-  height: calc(var(--font-size-xl)*2.333);
-  border-radius: 50%;
-  font-size: var(--font-size-xl);
-  color: var(--color-white);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--color-darkyellow);
 }
 
 .control .btn {
