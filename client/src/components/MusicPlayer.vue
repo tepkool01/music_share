@@ -9,7 +9,7 @@
       </header>
       <!-- Progress Controller -->
       <div class="control">
-        <Button class="btn btn-back" @click="back(); toggleClass('app', 'flashing');" id="back">
+        <Button class="btn btn-back flashing" @click="back()">
           <icon-base icon-name="backwards">
             <icon-backwards></icon-backwards>
           </icon-base>
@@ -31,8 +31,7 @@
       <input id="progress" class="progress" type="range" value="0" step="1" min="0" max="100" />
 
       <audio ref="audio" id="audio" preload="none" tabindex="0">
-        <source src="music.mp3" data-track-number="1" />
-        <source src="https://archive.org/download/calexico2006-12-02..flac16/calexico2006-12-02d1t02.mp3" data-track-number="2" />
+        <source v-for="(song, index) in songs" :src="song.URL" :data-track-number="index + 1" />
       </audio>
     </div>
 
@@ -54,16 +53,17 @@ import IconBase from "@/components/IconBase";
 import IconBackwards from "@/components/icons/IconBackwards";
 import IconPlay from "@/components/icons/IconPlay";
 import IconForwards from "@/components/icons/IconForwards";
+
 export default {
   name: 'MusicPlayer',
   data() {
     return {
-      socket: {},
       currentTime: 0,
       isPlaying: false,
+      currentSongIndex: 0,
       songs: [
-        {name: '', URL: ''},
-        {name: '', URL: ''},
+        {name: '', URL: 'music.mp3'},
+        {name: '', URL: 'https://archive.org/download/calexico2006-12-02..flac16/calexico2006-12-02d1t02.mp3'},
       ]
     }
   },
@@ -75,37 +75,49 @@ export default {
     Button
   },
   methods: {
-    initPlayer() {
-    },
     togglePlay() {
       console.log('> Play/Pause toggled');
       if (this.isPlaying) {
         this.pause()
       } else {
         this.play() // todo, promise/await?
-        this.isPlaying = true
       }
+      this.isPlaying = !this.isPlaying
     },
     play() {
       console.log('> Playing');
       this.$socket.emit('song:play', {'room': localStorage.getItem('room')}) // todo: replace with state
       this.$refs.audio.play()
     },
+    setSong(song) {
+      this.$refs.audio.setAttribute('src', song.URL);
+      this.$socket.emit('song:change', {
+        'room': localStorage.getItem('room'),
+        'song': song.URL
+      });
+    },
     pause() {
       console.log('> Pausing');
       this.$socket.emit('song:pause', {'room': localStorage.getItem('room')})
+      this.$refs.audio.pause()
     },
     next() {
       console.log('> Next');
+      this.currentSongIndex += 1
+      this.setSong(this.songs[this.currentSongIndex])
+      if (this.isPlaying) {
+        this.play()
+      }
     },
     back() {
       console.log('> Back');
+      this.currentSongIndex -= 1
+      this.setSong(this.songs[this.currentSongIndex])
+      if (this.isPlaying) {
+        this.play()
+      }
     }
   },
-  created() {
-    // this.socket = io()
-    this.initPlayer();
-  }
 }
 </script>
 
