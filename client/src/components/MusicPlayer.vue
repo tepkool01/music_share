@@ -70,10 +70,22 @@ import IconStarEmpty from "@/components/icons/IconEmpty";
 import IconStarFull from "@/components/icons/IconStarFull";
 
 import RoomSelector from '../components/RoomSelector';
+import {mapState} from "vuex";
 
 export default {
   name: 'MusicPlayer',
   inject: ['socket'],
+  components: {
+    IconStarEmpty,
+    IconStarFull,
+    IconForwards,
+    IconPlay,
+    IconPause,
+    IconBackwards,
+    IconBase,
+    Button,
+    RoomSelector
+  },
   data() {
     return {
       currentTime: 0,
@@ -86,16 +98,8 @@ export default {
       ]
     }
   },
-  components: {
-    IconStarEmpty,
-    IconStarFull,
-    IconForwards,
-    IconPlay,
-    IconPause,
-    IconBackwards,
-    IconBase,
-    Button,
-    RoomSelector
+  computed: {
+    ...mapState(['roomID']),
   },
   methods: {
     togglePlay() {
@@ -109,7 +113,7 @@ export default {
     },
     play() {
       console.log('> Playing');
-      this.socket.emit('song:play', {'room': 1}) // todo: replace with state
+      this.socket.emit('song:play', {'room': this.roomID})
       this.$refs.audio.play()
     },
     setSong(song) {
@@ -121,7 +125,7 @@ export default {
     },
     pause() {
       console.log('> Pausing');
-      this.socket.emit('song:pause', {'room': 1})
+      this.socket.emit('song:pause', {'room': this.roomID})
       this.$refs.audio.pause()
     },
     next() {
