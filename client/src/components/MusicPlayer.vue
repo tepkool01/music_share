@@ -72,13 +72,11 @@ import IconStarFull from "@/components/icons/IconStarFull";
 
 import RoomSelector from '../components/RoomSelector';
 
-import { io } from "socket.io-client"
-
 export default {
   name: 'MusicPlayer',
+  inject: ['socket'],
   data() {
     return {
-      socket: null,
       currentTime: 0,
       isPlaying: false,
       isKing: false,
@@ -148,9 +146,8 @@ export default {
     }
   },
   created() {
-    this.socket = io("http://localhost:5000");
     console.log("Created listeners");
-
+    console.log(this.socket)
     this.socket.on('broadcasted:song:play', function(msg) {
       console.log("Song play notification, msg");
       // this.$refs.audio.play()

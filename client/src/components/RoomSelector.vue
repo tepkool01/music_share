@@ -9,6 +9,20 @@
 
 <script>
 
+import { mapState } from "vuex";
+
+export default {
+  name: 'RoomSelector',
+  inject: ['socket'],
+  computed: {
+    ...mapState(['roomID']),
+  },
+  methods: {
+    roomChange() {
+      this.$store.dispatch('setRoom', 1)
+    }
+  },
+}
 </script>
 
 <style scoped>
