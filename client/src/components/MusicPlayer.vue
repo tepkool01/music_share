@@ -54,10 +54,13 @@ import IconBackwards from "@/components/icons/IconBackwards";
 import IconPlay from "@/components/icons/IconPlay";
 import IconForwards from "@/components/icons/IconForwards";
 
+import { io } from "socket.io-client"
+
 export default {
   name: 'MusicPlayer',
   data() {
     return {
+      socket: null,
       currentTime: 0,
       isPlaying: false,
       currentSongIndex: 0,
@@ -86,19 +89,19 @@ export default {
     },
     play() {
       console.log('> Playing');
-      this.$socket.emit('song:play', {'room': localStorage.getItem('room')}) // todo: replace with state
+      this.socket.emit('song:play', {'room': 1}) // todo: replace with state
       this.$refs.audio.play()
     },
     setSong(song) {
-      this.$refs.audio.setAttribute('src', song.URL);
-      this.$socket.emit('song:change', {
-        'room': localStorage.getItem('room'),
+      this.$refs.audio.setAttribute('src', song.URL); // todo: do I need to call the 'load' method?
+      this.socket.emit('song:change', {
+        'room': 1,
         'song': song.URL
       });
     },
     pause() {
       console.log('> Pausing');
-      this.$socket.emit('song:pause', {'room': localStorage.getItem('room')})
+      this.socket.emit('song:pause', {'room': 1})
       this.$refs.audio.pause()
     },
     next() {
@@ -117,6 +120,23 @@ export default {
         this.play()
       }
     }
+  },
+  created() {
+    this.socket = io("http://localhost:5000");
+    console.log("Created listeners");
+
+    this.socket.on('broadcasted:song:play', function(msg) {
+      console.log("Song play notification, msg");
+      // this.$refs.audio.play()
+    });
+    this.socket.on('broadcasted:song:pause', function(msg) {
+      console.log("Song pause notification, msg");
+      // this.$refs.audio.pause()
+    });
+    this.socket.on('broadcasted:song:change', function(song) {
+      console.log("Song change notification", song);
+      // this.$refs.audio.setAttribute('src', song.URL);
+    });
   },
 }
 </script>
