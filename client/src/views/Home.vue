@@ -6,7 +6,6 @@
 
 <script>
 import MusicPlayer from '../components/MusicPlayer'
-import RoomSelector from '../components/RoomSelector'
 
 export default {
   name: 'Home',

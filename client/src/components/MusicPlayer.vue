@@ -35,13 +35,26 @@
       </audio>
     </div>
 
-    <div class="todo-space">
-      <!-- https://codepen.io/craigstroman/pen/aOyRYx -->
-      <h4>Current time:</h4>
-      <span id="currentTime">0</span>
+    <div class="utility-space">
 
-      <div class="btn btn-toggle-control" onclick="toggleKing()">
-        <i class="fas fa-crown" id="icon-king"></i>
+      <div class="room-info">
+        <room-selector></room-selector>
+      </div>
+
+      <div class="current-time-info">
+        <h4>Current time:</h4>
+        <span id="currentTime">0</span>
+      </div>
+
+      <div class="king-toggle">
+        <div class="btn btn-toggle-control">
+          <Button class="btn btn-king" @click="toggleKing()">
+            <icon-base icon-name="king">
+              <icon-star-empty v-if="!this.isKing"></icon-star-empty>
+              <icon-star-full v-if="this.isKing"></icon-star-full>
+            </icon-base>
+          </Button>
+        </div>
       </div>
     </div>
   </div>
@@ -49,10 +62,15 @@
 
 <script>
 import Button from "@/components/Button";
+
 import IconBase from "@/components/IconBase";
 import IconBackwards from "@/components/icons/IconBackwards";
 import IconPlay from "@/components/icons/IconPlay";
 import IconForwards from "@/components/icons/IconForwards";
+import IconStarEmpty from "@/components/icons/IconEmpty";
+import IconStarFull from "@/components/icons/IconStarFull";
+
+import RoomSelector from '../components/RoomSelector';
 
 import { io } from "socket.io-client"
 
@@ -63,6 +81,7 @@ export default {
       socket: null,
       currentTime: 0,
       isPlaying: false,
+      isKing: false,
       currentSongIndex: 0,
       songs: [
         {name: '', URL: 'music.mp3'},
@@ -71,11 +90,14 @@ export default {
     }
   },
   components: {
+    IconStarEmpty,
+    IconStarFull,
     IconForwards,
     IconPlay,
     IconBackwards,
     IconBase,
-    Button
+    Button,
+    RoomSelector
   },
   methods: {
     togglePlay() {
@@ -119,6 +141,10 @@ export default {
       if (this.isPlaying) {
         this.play()
       }
+    },
+    toggleKing() {
+      this.isKing = this.isKing !== true;
+      console.log('> Toggling isKing to ', this.isKing);
     }
   },
   created() {
@@ -223,5 +249,12 @@ header h2 {
   height: var(--spacing-03);
   background-color: var(--color-lightblue);
   cursor: pointer;
+}
+
+.utility-space {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: var(--spacing-04) 0 var(--spacing-04) 0;
 }
 </style>
