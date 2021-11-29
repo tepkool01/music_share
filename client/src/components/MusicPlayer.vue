@@ -3,21 +3,22 @@
     <!-- Dashboard -->
     <div class="dashboard">
       <!-- Header -->
-      <header>
+      <div class="song-info">
         <h4>Currently playing:</h4>
         <h2>{ SongTitle }</h2>
-      </header>
+      </div>
       <!-- Progress Controller -->
       <div class="control">
-        <Button class="btn btn-back flashing" @click="back()">
+        <Button class="btn btn-back" @click="back()">
           <IconBase icon-name="backwards">
             <IconBackwards></IconBackwards>
           </IconBase>
         </Button>
 
         <Button class="btn btn-toggle-play" @click="togglePlay()">
-          <IconBase icon-name="play">
-            <IconPlay></IconPlay>
+          <IconBase icon-name="play" icon-color="var(--color-white)">
+            <IconPlay v-if="!this.isPlaying"></IconPlay>
+            <IconPause v-if="this.isPlaying"></IconPause>
           </IconBase>
         </Button>
 
@@ -28,15 +29,14 @@
         </Button>
       </div>
 
-      <input id="progress" class="progress" type="range" value="0" step="1" min="0" max="100" />
+      <input id="progress" class="progress" type="range" value="0" step="1" min="0" max="100"/>
 
       <audio ref="audio" id="audio" preload="none" tabindex="0">
-        <source v-for="(song, index) in songs" :src="song.URL" :data-track-number="index + 1" />
+        <source v-for="(song, index) in songs" :src="song.URL" :data-track-number="index + 1"/>
       </audio>
     </div>
 
     <div class="utility-space">
-
       <div class="room-info">
         <RoomSelector></RoomSelector>
       </div>
@@ -47,14 +47,12 @@
       </div>
 
       <div class="king-toggle">
-        <div class="btn btn-toggle-control">
-          <Button class="btn btn-king" @click="toggleKing()">
-            <IconBase icon-name="king">
-              <IconStarEmpty v-if="!this.isKing"></IconStarEmpty>
-              <IconStarFull v-if="this.isKing"></IconStarFull>
-            </IconBase>
-          </Button>
-        </div>
+        <Button class="btn btn-king" @click="toggleKing()">
+          <IconBase icon-name="whatever" icon-color="var(--color-lightyellow)">
+            <IconStarEmpty v-if="!this.isKing"></IconStarEmpty>
+            <IconStarFull v-if="this.isKing"></IconStarFull>
+          </IconBase>
+        </Button>
       </div>
     </div>
   </div>
@@ -66,6 +64,7 @@ import Button from "@/components/Button";
 import IconBase from "@/components/IconBase";
 import IconBackwards from "@/components/icons/IconBackwards";
 import IconPlay from "@/components/icons/IconPlay";
+import IconPause from "@/components/icons/IconPause";
 import IconForwards from "@/components/icons/IconForwards";
 import IconStarEmpty from "@/components/icons/IconEmpty";
 import IconStarFull from "@/components/icons/IconStarFull";
@@ -92,6 +91,7 @@ export default {
     IconStarFull,
     IconForwards,
     IconPlay,
+    IconPause,
     IconBackwards,
     IconBase,
     Button,

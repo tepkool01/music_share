@@ -4,7 +4,6 @@
        :height="height"
        viewBox="0 0 18 18"
        :aria-labelledby="iconName"
-       role="presentation"
   >
     <title :id="iconName" lang="en">{{iconName}} icon</title>
     <g :fill="iconColor">
@@ -18,7 +17,7 @@ export default {
   props: {
     iconName: {
       type: String,
-      default: 'box'
+      default: 'play'
     },
     width: {
       type: [Number, String],
@@ -30,7 +29,14 @@ export default {
     },
     iconColor: {
       type: String,
-      default: 'currentColor'
+      default: 'var(--color-icon)'
+    }
+  },
+  data() {
+    return {
+      someStyle: {
+        opacity: '100',
+      }
     }
   }
 }
