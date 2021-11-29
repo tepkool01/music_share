@@ -34,6 +34,16 @@
       <audio ref="audio" id="audio" preload="none" tabindex="0">
         <source v-for="(song, index) in songs" :src="song.URL" :data-track-number="index + 1"/>
       </audio>
+      <div class="time-info">
+        <div class="time">
+          <span id="currentTime">0:00</span>
+        </div>
+
+        <div class="time">
+          <span id="duration">0:00</span>
+        </div>
+      </div>
+
     </div>
 
     <div class="utility-space">
@@ -43,7 +53,7 @@
 
       <div class="current-time-info">
         <h4>Current time:</h4>
-        <span id="currentTime">0</span>
+<!--        <span id="currentTime">0</span>-->
       </div>
 
       <div class="king-toggle">
@@ -83,8 +93,8 @@ export default {
       isKing: false,
       currentSongIndex: 0,
       songs: [
-        {name: '', URL: 'music.mp3'},
-        {name: '', URL: 'https://archive.org/download/calexico2006-12-02..flac16/calexico2006-12-02d1t02.mp3'},
+        {name: 'Song 1', URL: 'music.mp3'},
+        {name: 'Song 2', URL: 'https://archive.org/download/calexico2006-12-02..flac16/calexico2006-12-02d1t02.mp3'},
       ]
     }
   },
@@ -181,8 +191,6 @@ export default {
   padding: var(--spacing-03) var(--spacing-03);
   background-color: var(--color-white);
   width: 100%;
-  max-width: 90vw;
-  border-bottom: 1px solid var(--color-grey);
   display: grid;
   align-items: center;
 }
