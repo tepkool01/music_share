@@ -117,9 +117,10 @@ export default {
       this.$refs.audio.play()
     },
     setSong(song) {
+      console.log('> Set Song', song);
       this.$refs.audio.setAttribute('src', song.URL); // todo: do I need to call the 'load' method?
       this.socket.emit('song:change', {
-        'room': 1,
+        'room': this.roomID,
         'song': song.URL
       });
     },
@@ -145,25 +146,34 @@ export default {
       }
     },
     toggleKing() {
-      this.isKing = this.isKing !== true;
+      this.isKing = !this.isKing;
       console.log('> Toggling isKing to ', this.isKing);
     }
   },
-  created() {
+  mounted() {
     console.log("Created listeners");
-    console.log(this.socket)
-    this.socket.on('broadcasted:song:play', function(msg) {
+
+    this.socket.on('broadcasted:song:play', (msg) => {
       console.log("Song play notification, msg");
-      // this.$refs.audio.play()
+      this.$refs.audio.play()
     });
-    this.socket.on('broadcasted:song:pause', function(msg) {
+    this.socket.on('broadcasted:song:pause', (msg) => {
       console.log("Song pause notification, msg");
-      // this.$refs.audio.pause()
+      this.$refs.audio.pause()
     });
-    this.socket.on('broadcasted:song:change', function(song) {
+    this.socket.on('broadcasted:song:change', (song) => {
       console.log("Song change notification", song);
-      // this.$refs.audio.setAttribute('src', song.URL);
+      this.$refs.audio.setAttribute('src', song);
+      this.$refs.audio.load()
+      if (this.isPlaying) {
+        this.$refs.audio.play()
+      }
     });
+
+    // just for testing
+    this.$refs.audio.ontimeupdate = () => {
+      console.log(this.$refs.audio.currentTime);
+    };
   },
 }
 </script>
