@@ -8,6 +8,11 @@ export default createStore({
 			roomID: 0,
 		}
 	},
+	actions: {
+		changeRoom ({ commit }, roomID) {
+			commit('setRoom', roomID)
+		},
+	},
 	mutations: {
 		setRoom (state, ID) { state.roomID = ID },
 	},
