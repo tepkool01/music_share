@@ -5,9 +5,7 @@
       <!-- Header -->
       <div class="song-info">
         <h4>Currently playing:</h4>
-      <!-- TODO: Update this to reflect 'songs[currentSongIndex].name'
-            It should also get updated on next / previous song changes-->
-        <h2> {{ songName }} </h2>
+        <h2>{ SongTitle }</h2>
       </div>
       <!-- Progress Controller -->
       <div class="control">
@@ -36,23 +34,16 @@
       <audio ref="audio" id="audio" preload="none" tabindex="0">
         <source v-for="(song, index) in songs" :src="song.URL" :data-track-number="index + 1"/>
       </audio>
-      <div class="time-info">
-        <div class="time">
-        <!-- TODO: Hook this up to reflect the current time of the song (MM:SS) -->
-          <span id="currentTime">0:00</span>
-        </div>
-
-        <div class="time">
-        <!-- TODO: Hook this up to show the full song's duration (MM:SS) -->
-          <span id="duration">0:00</span>
-        </div>
-      </div>
-
     </div>
 
     <div class="utility-space">
       <div class="room-info">
         <RoomSelector></RoomSelector>
+      </div>
+
+      <div class="current-time-info">
+        <h4>Current time:</h4>
+        <span id="currentTime">0</span>
       </div>
 
       <div class="king-toggle">
@@ -79,25 +70,11 @@ import IconStarEmpty from "@/components/icons/IconEmpty";
 import IconStarFull from "@/components/icons/IconStarFull";
 
 import RoomSelector from '../components/RoomSelector';
-
-import {io} from "socket.io-client"
+import {mapState} from "vuex";
 
 export default {
   name: 'MusicPlayer',
-  data() {
-    return {
-      socket: null,
-      currentTime: 0,
-      isPlaying: false,
-      isKing: false,
-      currentSongIndex: 0,
-      currentSongName: 'Song Name',
-      songs: [
-        {name: 'Song1', URL: 'music.mp3'},
-        {name: 'Song2', URL: 'https://archive.org/download/calexico2006-12-02..flac16/calexico2006-12-02d1t02.mp3'},
-      ]
-    }
-  },
+  inject: ['socket'],
   components: {
     IconStarEmpty,
     IconStarFull,
@@ -108,6 +85,21 @@ export default {
     IconBase,
     Button,
     RoomSelector
+  },
+  data() {
+    return {
+      currentTime: 0,
+      isPlaying: false,
+      isKing: false,
+      currentSongIndex: 0,
+      songs: [
+        {name: '', URL: 'music.mp3'},
+        {name: '', URL: 'https://archive.org/download/calexico2006-12-02..flac16/calexico2006-12-02d1t02.mp3'},
+      ]
+    }
+  },
+  computed: {
+    ...mapState(['roomID']),
   },
   methods: {
     togglePlay() {
@@ -121,19 +113,20 @@ export default {
     },
     play() {
       console.log('> Playing');
-      this.socket.emit('song:play', {'room': 1}) // todo: replace with state
+      this.socket.emit('song:play', {'room': this.roomID})
       this.$refs.audio.play()
     },
     setSong(song) {
+      console.log('> Set Song', song);
       this.$refs.audio.setAttribute('src', song.URL); // todo: do I need to call the 'load' method?
       this.socket.emit('song:change', {
-        'room': 1,
+        'room': this.roomID,
         'song': song.URL
       });
     },
     pause() {
       console.log('> Pausing');
-      this.socket.emit('song:pause', {'room': 1})
+      this.socket.emit('song:pause', {'room': this.roomID})
       this.$refs.audio.pause()
     },
     next() {
@@ -153,34 +146,34 @@ export default {
       }
     },
     toggleKing() {
-      this.isKing = this.isKing !== true;
+      this.isKing = !this.isKing;
       console.log('> Toggling isKing to ', this.isKing);
     }
   },
-  computed: {
-    songName: {
-      // getter
-      get() {
-        return this.songs[this.currentSongIndex].name;
-      }
-    }
-  },
-  created() {
-    this.socket = io("http://localhost:5000");
+  mounted() {
     console.log("Created listeners");
 
-    this.socket.on('broadcasted:song:play', function (msg) {
+    this.socket.on('broadcasted:song:play', (msg) => {
       console.log("Song play notification, msg");
-      // this.$refs.audio.play()
+      this.$refs.audio.play()
     });
-    this.socket.on('broadcasted:song:pause', function (msg) {
+    this.socket.on('broadcasted:song:pause', (msg) => {
       console.log("Song pause notification, msg");
-      // this.$refs.audio.pause()
+      this.$refs.audio.pause()
     });
-    this.socket.on('broadcasted:song:change', function (song) {
+    this.socket.on('broadcasted:song:change', (song) => {
       console.log("Song change notification", song);
-      // this.$refs.audio.setAttribute('src', song.URL);
+      this.$refs.audio.setAttribute('src', song);
+      this.$refs.audio.load()
+      if (this.isPlaying) {
+        this.$refs.audio.play()
+      }
     });
+
+    // just for testing
+    this.$refs.audio.ontimeupdate = () => {
+      console.log(this.$refs.audio.currentTime);
+    };
   },
 }
 </script>
@@ -190,8 +183,9 @@ export default {
 .player {
   min-width: 95vw;
   background-color: var(--color-white);
-  display: grid;
+  display: flex;
   align-items: center;
+  flex-direction: column;
 }
 
 .dashboard {
@@ -200,52 +194,49 @@ export default {
   width: 100%;
   max-width: 90vw;
   border-bottom: 1px solid var(--color-grey);
-  display: grid;
-  align-items: center;
-  margin: 0 auto;
 }
 
 /* Music player data (song title) */
-.song-info {
+header {
   text-align: center;
   margin-bottom: var(--spacing-02);
 }
 
-.song-info h4 {
+header h4 {
   color: var(--color-darkyellow);
   font-size: var(--font-size-s);
 }
 
-.song-info h2 {
+header h2 {
   color: var(--color-text);
   font-size: var(--font-size-l);
 }
 
 /* Player controls section*/
 .control {
-  display: grid;
-  grid-template-areas: ". . .";
+  display: flex;
   align-items: center;
   justify-content: space-around;
   padding: var(--spacing-04) 0 var(--spacing-04) 0;
 }
 
 .control .btn {
+  color: var(--color-icon);
   padding: 18px;
   font-size: var(--font-size-xl);
 }
 
 .control .btn.active {
-  fill: var(--color-lightyellow);
+  color: var(--color-lightyellow);
 }
 
 .control .btn-toggle-play {
-  width: calc(var(--font-size-xl) * 2.333);
-  height: calc(var(--font-size-xl) * 2.333);
+  width: calc(var(--font-size-xl)*2.333);
+  height: calc(var(--font-size-xl)*2.333);
   border-radius: 50%;
   font-size: var(--font-size-xl);
   color: var(--color-white);
-  display: grid;
+  display: flex;
   align-items: center;
   justify-content: center;
   background-color: var(--color-darkyellow);
@@ -271,19 +262,10 @@ export default {
   cursor: pointer;
 }
 
-.time-info {
-  display: grid;
-  grid-template-areas: '. .';
-  justify-content: space-between;
-  color: var(--color-neutral-40);
-  font-size: var(--font-size-s);
-}
-
 .utility-space {
-  display: grid;
-  grid-template-areas: ". . .";
+  display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: var(--spacing-04) var(--spacing-03);
+  justify-content: space-around;
+  padding: var(--spacing-04) 0 var(--spacing-04) 0;
 }
 </style>
