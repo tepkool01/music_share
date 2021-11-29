@@ -5,7 +5,7 @@
       <!-- Header -->
       <div class="song-info">
         <h4>Currently playing:</h4>
-        <h2>{ SongTitle }</h2>
+        <h2>{{ songName }}</h2>
       </div>
       <!-- Progress Controller -->
       <div class="control">
@@ -93,13 +93,19 @@ export default {
       isKing: false,
       currentSongIndex: 0,
       songs: [
-        {name: '', URL: 'music.mp3'},
-        {name: '', URL: 'https://archive.org/download/calexico2006-12-02..flac16/calexico2006-12-02d1t02.mp3'},
+        {name: 'Song Title 1', URL: 'music.mp3'},
+        {name: 'Song Title 2', URL: 'https://archive.org/download/calexico2006-12-02..flac16/calexico2006-12-02d1t02.mp3'},
       ]
     }
   },
   computed: {
     ...mapState(['roomID']),
+    songName: {
+      // getter
+      get() {
+        return this.songs[this.currentSongIndex].name;
+      }
+    }
   },
   methods: {
     togglePlay() {
