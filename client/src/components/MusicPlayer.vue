@@ -56,6 +56,13 @@
       </div>
     </div>
   </div>
+  <!-- todo: maybe break this into own component -->
+  <div>
+    <h3>Playlist</h3>
+    <ol>
+      <li v-for="song in songs" :style="song === activeSong ? 'font-weight:bold' : 'font-weight:normal'">{{ song.name }}</li>
+    </ol>
+  </div>
 </template>
 
 <script>
@@ -93,13 +100,16 @@ export default {
       isKing: false,
       currentSongIndex: 0,
       songs: [
-        {name: '', URL: 'music.mp3'},
-        {name: '', URL: 'https://archive.org/download/calexico2006-12-02..flac16/calexico2006-12-02d1t02.mp3'},
+        {name: 'asdf', URL: 'music.mp3'},
+        {name: 'asdf2', URL: 'https://archive.org/download/calexico2006-12-02..flac16/calexico2006-12-02d1t02.mp3'},
       ]
     }
   },
   computed: {
     ...mapState(['roomID']),
+    activeSong () {
+      return this.songs[this.currentSongIndex]
+    }
   },
   methods: {
     togglePlay() {
