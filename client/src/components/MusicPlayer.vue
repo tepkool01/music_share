@@ -191,19 +191,19 @@ export default {
 <style scoped>
 
 .player {
-  min-width: 95vw;
-  background-color: var(--color-white);
-  display: flex;
-  align-items: center;
-  flex-direction: column;
+  padding: var(--spacing-03);
+  max-width: 60rem;
 }
 
 .dashboard {
-  padding: var(--spacing-03) var(--spacing-03);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: var(--spacing-03);
   background-color: var(--color-white);
-  width: 100%;
-  max-width: 90vw;
-  border-bottom: 1px solid var(--color-grey);
+  padding: var(--spacing-02) var(--spacing-03);
+  border-radius: 5px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
 }
 
 /* Music player data (song title) */
