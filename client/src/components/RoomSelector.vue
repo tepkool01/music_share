@@ -4,7 +4,7 @@
       <span id="roomText"></span>
     </div>
     <label for="room">Room</label><input id="room" />
-    <button onclick="roomChange()">Join Room</button>
+    <button v-on:click="roomChange">Join Room</button>
 </template>
 
 <script>
@@ -19,7 +19,9 @@ export default {
   },
   methods: {
     roomChange() {
-      this.$store.dispatch('setRoom', 1)
+      console.log("> roomChange")
+      this.socket.emit('room:change', 1);
+      this.$store.dispatch('changeRoom', 1)
     }
   },
 }
