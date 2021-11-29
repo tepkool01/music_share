@@ -93,8 +93,8 @@ export default {
       isKing: false,
       currentSongIndex: 0,
       songs: [
-        {name: 'Song 1', URL: 'music.mp3'},
-        {name: 'Song 2', URL: 'https://archive.org/download/calexico2006-12-02..flac16/calexico2006-12-02d1t02.mp3'},
+        {name: '', URL: 'music.mp3'},
+        {name: '', URL: 'https://archive.org/download/calexico2006-12-02..flac16/calexico2006-12-02d1t02.mp3'},
       ]
     }
   },
@@ -114,8 +114,7 @@ export default {
       console.log('> Play/Pause toggled');
       if (this.isPlaying) {
         this.pause()
-      }
-      else {
+      } else {
         this.play() // todo, promise/await?
       }
       this.isPlaying = !this.isPlaying
@@ -191,6 +190,8 @@ export default {
   padding: var(--spacing-03) var(--spacing-03);
   background-color: var(--color-white);
   width: 100%;
+  max-width: 90vw;
+  border-bottom: 1px solid var(--color-grey);
   display: grid;
   align-items: center;
 }
