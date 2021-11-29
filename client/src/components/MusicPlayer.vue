@@ -5,7 +5,9 @@
       <!-- Header -->
       <div class="song-info">
         <h4>Currently playing:</h4>
-        <h2>{ SongTitle }</h2>
+      <!-- TODO: Update this to reflect 'songs[currentSongIndex].name'
+            It should also get updated on next / previous song changes-->
+        <h2> {{ songName }} </h2>
       </div>
       <!-- Progress Controller -->
       <div class="control">
@@ -36,10 +38,12 @@
       </audio>
       <div class="time-info">
         <div class="time">
+        <!-- TODO: Hook this up to reflect the current time of the song (MM:SS) -->
           <span id="currentTime">0:00</span>
         </div>
 
         <div class="time">
+        <!-- TODO: Hook this up to show the full song's duration (MM:SS) -->
           <span id="duration">0:00</span>
         </div>
       </div>
@@ -49,11 +53,6 @@
     <div class="utility-space">
       <div class="room-info">
         <RoomSelector></RoomSelector>
-      </div>
-
-      <div class="current-time-info">
-        <h4>Current time:</h4>
-<!--        <span id="currentTime">0</span>-->
       </div>
 
       <div class="king-toggle">
@@ -92,9 +91,10 @@ export default {
       isPlaying: false,
       isKing: false,
       currentSongIndex: 0,
+      currentSongName: 'Song Name',
       songs: [
-        {name: '', URL: 'music.mp3'},
-        {name: '', URL: 'https://archive.org/download/calexico2006-12-02..flac16/calexico2006-12-02d1t02.mp3'},
+        {name: 'Song1', URL: 'music.mp3'},
+        {name: 'Song2', URL: 'https://archive.org/download/calexico2006-12-02..flac16/calexico2006-12-02d1t02.mp3'},
       ]
     }
   },
@@ -157,6 +157,14 @@ export default {
       console.log('> Toggling isKing to ', this.isKing);
     }
   },
+  computed: {
+    songName: {
+      // getter
+      get() {
+        return this.songs[this.currentSongIndex].name;
+      }
+    }
+  },
   created() {
     this.socket = io("http://localhost:5000");
     console.log("Created listeners");
@@ -194,6 +202,7 @@ export default {
   border-bottom: 1px solid var(--color-grey);
   display: grid;
   align-items: center;
+  margin: 0 auto;
 }
 
 /* Music player data (song title) */
@@ -262,6 +271,14 @@ export default {
   cursor: pointer;
 }
 
+.time-info {
+  display: grid;
+  grid-template-areas: '. .';
+  justify-content: space-between;
+  color: var(--color-neutral-40);
+  font-size: var(--font-size-s);
+}
+
 .utility-space {
   display: grid;
   grid-template-areas: ". . .";
@@ -269,5 +286,4 @@ export default {
   justify-content: space-between;
   padding: var(--spacing-04) var(--spacing-03);
 }
-
 </style>
