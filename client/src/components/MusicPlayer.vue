@@ -10,21 +10,21 @@
       <!-- Progress Controller -->
       <div class="control">
         <Button class="btn btn-back flashing" @click="back()">
-          <icon-base icon-name="backwards">
-            <icon-backwards></icon-backwards>
-          </icon-base>
+          <IconBase icon-name="backwards">
+            <IconBackwards></IconBackwards>
+          </IconBase>
         </Button>
 
         <Button class="btn btn-toggle-play" @click="togglePlay()">
-          <icon-base icon-name="play">
-            <icon-play></icon-play>
-          </icon-base>
+          <IconBase icon-name="play">
+            <IconPlay></IconPlay>
+          </IconBase>
         </Button>
 
         <Button class="btn btn-next" @click="next()">
-          <icon-base icon-name="forwards">
-            <icon-forwards></icon-forwards>
-          </icon-base>
+          <IconBase icon-name="forwards">
+            <IconForwards></IconForwards>
+          </IconBase>
         </Button>
       </div>
 
@@ -38,7 +38,7 @@
     <div class="utility-space">
 
       <div class="room-info">
-        <room-selector></room-selector>
+        <RoomSelector></RoomSelector>
       </div>
 
       <div class="current-time-info">
@@ -49,10 +49,10 @@
       <div class="king-toggle">
         <div class="btn btn-toggle-control">
           <Button class="btn btn-king" @click="toggleKing()">
-            <icon-base icon-name="king">
-              <icon-star-empty v-if="!this.isKing"></icon-star-empty>
-              <icon-star-full v-if="this.isKing"></icon-star-full>
-            </icon-base>
+            <IconBase icon-name="king">
+              <IconStarEmpty v-if="!this.isKing"></IconStarEmpty>
+              <IconStarFull v-if="this.isKing"></IconStarFull>
+            </IconBase>
           </Button>
         </div>
       </div>
