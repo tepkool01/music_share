@@ -34,34 +34,26 @@
       <audio ref="audio" id="audio" preload="none" tabindex="0">
         <source v-for="(song, index) in songs" :src="song.URL" :data-track-number="index + 1"/>
       </audio>
+      <div class="utility-space">
+        <div class="room-info">
+          <RoomSelector></RoomSelector>
+        </div>
+
+        <div class="current-time-info">
+          <h4>Current time:</h4>
+          <span id="currentTime">0</span>
+        </div>
+
+        <div class="king-toggle">
+          <Button class="btn btn-king" @click="toggleKing()">
+            <IconBase icon-name="whatever" icon-color="var(--color-lightyellow)">
+              <IconStarEmpty v-if="!this.isKing"></IconStarEmpty>
+              <IconStarFull v-if="this.isKing"></IconStarFull>
+            </IconBase>
+          </Button>
+        </div>
+      </div>
     </div>
-
-    <div class="utility-space">
-      <div class="room-info">
-        <RoomSelector></RoomSelector>
-      </div>
-
-      <div class="current-time-info">
-        <h4>Current time:</h4>
-        <span id="currentTime">0</span>
-      </div>
-
-      <div class="king-toggle">
-        <Button class="btn btn-king" @click="toggleKing()">
-          <IconBase icon-name="whatever" icon-color="var(--color-lightyellow)">
-            <IconStarEmpty v-if="!this.isKing"></IconStarEmpty>
-            <IconStarFull v-if="this.isKing"></IconStarFull>
-          </IconBase>
-        </Button>
-      </div>
-    </div>
-  </div>
-  <!-- todo: maybe break this into own component -->
-  <div>
-    <h3>Playlist</h3>
-    <ol>
-      <li v-for="song in songs" :style="song === activeSong ? 'font-weight:bold' : 'font-weight:normal'">{{ song.name }}</li>
-    </ol>
   </div>
 </template>
 
