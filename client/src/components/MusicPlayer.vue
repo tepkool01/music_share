@@ -2,12 +2,12 @@
   <div class="player">
     <!-- Dashboard -->
     <div class="dashboard">
-      <!-- .song-info -->
-      <div class="song-info">
+
+      <div class="current-song">
         <h4>Currently playing:</h4>
         <h2>{{ songs[currentSongIndex].name }}</h2>
       </div>
-      <!-- Progress Controller -->
+
       <div class="control">
         <Button class="btn btn-back" @click="back()">
           <IconBase icon-name="backwards">
@@ -29,23 +29,26 @@
         </Button>
       </div>
 
-      <input id="progress" class="progress" type="range" value="0" step="1" min="0" max="100"/>
+      <div class="progress">
+        <input id="progress" class="progress-bar" type="range" value="0" step="1" min="0" max="100"/>
+        <div class="time">
+            <span id="current-time">{{ currentTime }}</span>
+            <span id="duration">{{ currentSongDuration }}</span>
+        </div>
+      </div>
 
       <audio ref="audio" id="audio" preload="none" tabindex="0">
         <source v-for="(song, index) in songs" :src="song.URL" :data-track-number="index + 1"/>
       </audio>
 
-      <div class="utility-space">
-        <div class="room-info">
+      <div class="player-utilities">
+        <div class="room-selector">
           <RoomSelector></RoomSelector>
         </div>
-        <div class="current-time-info">
-          <h4>Current time:</h4>
-          <span id="currentTime">0</span>
-        </div>
+
         <div class="king-toggle">
           <Button class="btn btn-king" @click="toggleKing()">
-            <IconBase icon-name="whatever">
+            <IconBase icon-name="King Toggle">
               <IconStarEmpty v-if="!this.isKing"></IconStarEmpty>
               <IconStarFull v-if="this.isKing"></IconStarFull>
             </IconBase>
@@ -86,11 +89,12 @@ export default {
   },
   data() {
     return {
-      currentTime: 0,
+      currentTime: "00:00",
       isPlaying: this.$store.state.isPlaying,
       isKing: false,
       currentSongIndex: this.$store.state.currentSongIndex,
-      songs: this.$store.state.songs
+      songs: this.$store.state.songs,
+      currentSongDuration: "00:00"
     }
   },
   computed: {
@@ -100,6 +104,13 @@ export default {
     }
   },
   methods: {
+    calculateTime(secs) {
+      console.log(secs);
+      const minutes = Math.floor(secs / 60);
+      const seconds = Math.floor(secs % 60);
+      const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+      return `${minutes}:${returnedSeconds}`;
+    },
     togglePlay() {
       console.log('> Play/Pause toggled');
       if (this.isPlaying) {
@@ -107,6 +118,8 @@ export default {
       } else {
         this.play() // todo, promise/await?
       }
+      this.currentSongDuration = this.calculateTime(this.$refs.audio.duration);
+      console.log('hello from togglePlay():', this.currentSongDuration);
       this.isPlaying = !this.isPlaying
     },
     play() {
@@ -118,6 +131,7 @@ export default {
     setSong(song) {
       console.log('> Set Song', song);
       this.$refs.audio.setAttribute('src', song.URL); // todo: do I need to call the 'load' method?
+      this.currentSongDuration = this.calculateTime(this.$refs.audio.duration);
       this.socket.emit('song:change', {
         'room': this.roomID,
         'song': song.URL
@@ -170,9 +184,14 @@ export default {
       }
     });
 
+    this.currentSongDuration = this.calculateTime(this.$refs.audio.currentTime)
+    console.log('hello from mounted():', this.currentSongDuration);
+
     // just for testing
     this.$refs.audio.ontimeupdate = () => {
       console.log(this.$refs.audio.currentTime);
+      this.currentTime = this.calculateTime(this.$refs.audio.currentTime);
+      console.log('hello from audio.ontimeupdate:', this.currentSongDuration);
     };
   },
 }
@@ -189,7 +208,6 @@ export default {
   display: flex;
   align-items: center;
   flex-direction: column;
-  margin-bottom: var(--spacing-03);
   background-color: var(--color-white);
   padding: var(--spacing-02) var(--spacing-03);
   border-radius: 5px;
@@ -197,23 +215,24 @@ export default {
 }
 
 /* Music player data (song title) */
-.song-info {
+.current-song {
   text-align: center;
-  margin-bottom: var(--spacing-02);
+  margin-bottom: var(--spacing-01);
 }
 
-.song-info h4 {
+.current-song h4 {
   color: var(--color-primary);
   font-size: var(--font-size-s);
 }
 
-.song-info h2 {
+.current-song h2 {
   color: var(--color-text);
   font-size: var(--font-size-l);
 }
 
 /* Player controls section*/
 .control {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -244,6 +263,10 @@ export default {
 
 .progress {
   width: 100%;
+}
+
+.progress-bar {
+  width: 100%;
   -webkit-appearance: none;
   height: var(--spacing-03);
   background: #d3d3d3;
@@ -253,7 +276,7 @@ export default {
   transition: opacity 0.2s;
 }
 
-.progress::-webkit-slider-thumb {
+.progress-bar::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: var(--spacing-02);
@@ -262,10 +285,17 @@ export default {
   cursor: pointer;
 }
 
-.utility-space {
+.time {
+  display: flex;
+  justify-content: space-between;
+  color: var(--color-neutral-60);
+}
+
+.player-utilities {
+  width: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
   padding: var(--spacing-04) 0 var(--spacing-04) 0;
 }
 </style>
