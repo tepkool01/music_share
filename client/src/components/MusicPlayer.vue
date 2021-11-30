@@ -46,7 +46,7 @@
 
         <div class="king-toggle">
           <Button class="btn btn-king" @click="toggleKing()">
-            <IconBase icon-name="whatever" icon-color="var(--color-lightyellow)">
+            <IconBase icon-name="whatever">
               <IconStarEmpty v-if="!this.isKing"></IconStarEmpty>
               <IconStarFull v-if="this.isKing"></IconStarFull>
             </IconBase>
@@ -195,7 +195,7 @@ export default {
   background-color: var(--color-white);
   padding: var(--spacing-02) var(--spacing-03);
   border-radius: 5px;
-  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 3px var(--color-neutral-90);
 }
 
 /* Music player data (song title) */
@@ -205,7 +205,7 @@ header {
 }
 
 header h4 {
-  color: var(--color-darkyellow);
+  color: var(--color-primary);
   font-size: var(--font-size-s);
 }
 
@@ -229,7 +229,7 @@ header h2 {
 }
 
 .control .btn.active {
-  color: var(--color-lightyellow);
+  color: var(--color-princeton-orange);
 }
 
 .control .btn-toggle-play {
@@ -241,7 +241,7 @@ header h2 {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--color-darkyellow);
+  background-color: var(--color-primary);
 }
 
 .progress {
@@ -260,7 +260,7 @@ header h2 {
   appearance: none;
   width: var(--spacing-02);
   height: var(--spacing-03);
-  background-color: var(--color-lightblue);
+  background-color: var(--color-primary);
   cursor: pointer;
 }
 

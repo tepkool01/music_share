@@ -53,7 +53,7 @@ name: "Playlist",
 }
 
 .song.active {
-  background-color: var(--color-darkyellow);
+  background-color: var(--color-primary);
 }
 
 .song:active {
@@ -70,7 +70,7 @@ name: "Playlist",
   width: var(--spacing-05);
   height: var(--spacing-05);
   border-radius: 50%;
-  background-color: var(--color-darkblue);
+  background-color: var(--color-primary);
   margin: 0 var(--spacing-02);
 }
 
