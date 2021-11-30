@@ -2,10 +2,10 @@
   <div class="player">
     <!-- Dashboard -->
     <div class="dashboard">
-      <!-- Header -->
+      <!-- .song-info -->
       <div class="song-info">
         <h4>Currently playing:</h4>
-        <h2>{ SongTitle }</h2>
+        <h2>{{ songs[currentSongIndex].name }}</h2>
       </div>
       <!-- Progress Controller -->
       <div class="control">
@@ -34,16 +34,15 @@
       <audio ref="audio" id="audio" preload="none" tabindex="0">
         <source v-for="(song, index) in songs" :src="song.URL" :data-track-number="index + 1"/>
       </audio>
+
       <div class="utility-space">
         <div class="room-info">
           <RoomSelector></RoomSelector>
         </div>
-
         <div class="current-time-info">
           <h4>Current time:</h4>
           <span id="currentTime">0</span>
         </div>
-
         <div class="king-toggle">
           <Button class="btn btn-king" @click="toggleKing()">
             <IconBase icon-name="whatever">
@@ -88,13 +87,10 @@ export default {
   data() {
     return {
       currentTime: 0,
-      isPlaying: false,
+      isPlaying: this.$store.state.isPlaying,
       isKing: false,
-      currentSongIndex: 0,
-      songs: [
-        {name: 'asdf', URL: 'music.mp3'},
-        {name: 'asdf2', URL: 'https://archive.org/download/calexico2006-12-02..flac16/calexico2006-12-02d1t02.mp3'},
-      ]
+      currentSongIndex: this.$store.state.currentSongIndex,
+      songs: this.$store.state.songs
     }
   },
   computed: {
@@ -116,6 +112,7 @@ export default {
     play() {
       console.log('> Playing');
       this.socket.emit('song:play', {'room': this.roomID})
+      this.$store.dispatch('changePlayState', true)
       this.$refs.audio.play()
     },
     setSong(song) {
@@ -129,6 +126,7 @@ export default {
     pause() {
       console.log('> Pausing');
       this.socket.emit('song:pause', {'room': this.roomID})
+      this.$store.dispatch('changePlayState', false)
       this.$refs.audio.pause()
     },
     next() {
@@ -199,17 +197,17 @@ export default {
 }
 
 /* Music player data (song title) */
-header {
+.song-info {
   text-align: center;
   margin-bottom: var(--spacing-02);
 }
 
-header h4 {
+.song-info h4 {
   color: var(--color-primary);
   font-size: var(--font-size-s);
 }
 
-header h2 {
+.song-info h2 {
   color: var(--color-text);
   font-size: var(--font-size-l);
 }
