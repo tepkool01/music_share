@@ -1,5 +1,5 @@
 <template>
-  <div class="container">666
+  <div class="container">
     <MusicPlayer />
   </div>
 </template>
