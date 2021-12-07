@@ -1,0 +1,14 @@
+{
+  "name": "music_share_server",
+  "version": "1.0.0",
+  "main": "musicServer.js",
+  "repository": "git@github.com:/tepkool01/music_share.git",
+  "author": "Michael Young <mvy1221@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "node musicServer.js"
+  },
+  "dependencies": {
+    "socket.io": "^4.4.0"
+  }
+}
