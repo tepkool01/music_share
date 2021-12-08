@@ -1,6 +1,3 @@
-// const os = require('os');
-// import os from 'os'
-
 const http = require('http');
 // const { Server } = require("socket.io");
 // import http from 'http'
@@ -37,31 +34,5 @@ io.on('connection', (socket) => {
 
 // Start server
 server.listen(port, () => {
-	// let privateIP = getPrivateIP();
-	// console.log('Private Network IP: http://' + privateIP + ':' + port)
-	// console.log('listening on *:' + port);
 	console.log('Server started at http://localhost:' + port);
 });
-
-
-// Static Routes
-// app.use(express.static(__dirname + '/public'));
-// app.get('/', function(req, res) {
-// 	res.sendFile(path.join(__dirname, '/index.html'));
-// });
-
-
-
-// function getPrivateIP() {
-// 	// Get local network IP address
-// 	let networkInterfaces = os.networkInterfaces();
-// 	let privateIP = '';
-// 	if (networkInterfaces.hasOwnProperty('Wi-Fi')) {
-// 		privateIP = networkInterfaces['Wi-Fi'][4]['address'];
-// 	} else if (networkInterfaces.hasOwnProperty('Ethernet')) {
-// 		privateIP = networkInterfaces['Ethernet'][4]['address'];
-// 	} else {
-// 		console.log(networkInterfaces);
-// 	}
-// 	return privateIP;
-// }

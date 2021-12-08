@@ -6,10 +6,10 @@ COPY package.json /app/package.json
 RUN yarn install
 
 # Copy application components
-COPY . .
+COPY src/ /app/src/
 
 # Inter-container communication, but still useful to see here for reference
-EXPOSE 8080
+EXPOSE 5000
 
 # Run the application
 CMD ["yarn", "run", "serve"]
