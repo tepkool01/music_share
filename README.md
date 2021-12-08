@@ -3,6 +3,7 @@
 | Tool | Version |
 |------|---------|
  | Docker | 20.10.11 |
+ | Node | 16.13.1 |
 
 ## First time running
 These steps will build your initial docker containers from the source you have in the folder, and bind/mount your 
