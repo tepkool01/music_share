@@ -1,26 +1,32 @@
 :root {
-    --color-darkblue: hsl(225, 40%, 18%);
-    --color-lightblue: hsl(213, 30%, 32%);
-    --color-darkyellow: hsl(31, 50%, 66%);
-    --color-lightyellow: hsl(37, 72%, 78%);
-    --color-neutral-100: hsl(0, 0%, 100%);
-    --color-neutral-90: hsl(0, 0%, 90%);
-    --color-neutral-40: hsl(0, 0%, 40%);
-    --color-neutral-20: hsl(0, 0%, 20%);
+    --color-neutral-100:        hsl(0, 0%, 100%);
+    --color-neutral-90:         hsl(0, 0%, 90%);
+    --color-neutral-80:         hsl(0, 0%, 80%);
+    --color-neutral-60:         hsl(0, 0%, 60%);
+    --color-neutral-40:         hsl(0, 0%, 40%);
+    --color-neutral-20:         hsl(0, 0%, 20%);
+    --color-cyber-yellow:       hsl(48, 100%, 59%);
+    --color-princeton-orange:   hsl(5, 85%, 57%); /* 3.72 contrast on #fff -- only use for 18pt+ / 14pt+ bold and icons / graphics */
+    --color-red-pigment:        hsl(0, 100%, 42%); /* 5.48 color contrast ratio on #fff, meets AA requirements */
+    --color-jet:                hsl(280, 3%, 19%);
+    --color-eggshell:           hsl(57, 29%, 87%);
 
-    --color-grey: var(--color-neutral-90);
-    --color-white: var(--color-neutral-100);
-    --color-text: var(--color-neutral-40);
-    --color-icon: var(--color-neutral-20);
 
-    --spacing-01: 0.25rem;
-    --spacing-02: 0.50rem;
-    --spacing-03: 1rem;
-    --spacing-04: 2rem;
-    --spacing-05: 3rem;
+    --color-primary:    var(--color-red-pigment);
+    --color-grey:       var(--color-neutral-90);
+    --color-white:      var(--color-neutral-100);
+    --color-text:       var(--color-jet);
+    --color-icon:       var(--color-neutral-20);
+
+    --spacing-01:   0.25rem;
+    --spacing-02:   0.50rem;
+    --spacing-03:   1rem;
+    --spacing-04:   2rem;
+    --spacing-05:   3rem;
+
     --font-size-xs: 0.707rem;
-    --font-size-s: 1.414rem;
-    --font-size-m: 1.999rem;
-    --font-size-l: 2.827rem;
+    --font-size-s:  1.414rem;
+    --font-size-m:  1.999rem;
+    --font-size-l:  2.827rem;
     --font-size-xl: 3.998rem;
 }

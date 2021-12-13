@@ -2,12 +2,12 @@
   <div class="player">
     <!-- Dashboard -->
     <div class="dashboard">
-      <!-- Header -->
-      <div class="song-info">
+
+      <div class="current-song">
         <h4>Currently playing:</h4>
-        <h2>{{ songName }}</h2>
+        <h2>{{ songs[currentSongIndex].name }}</h2>
       </div>
-      <!-- Progress Controller -->
+
       <div class="control">
         <Button class="btn btn-back" @click="back()">
           <IconBase icon-name="backwards">
@@ -88,26 +88,28 @@ export default {
   },
   data() {
     return {
-      currentTime: 0,
-      isPlaying: false,
+      currentTime: "00:00",
+      isPlaying: this.$store.state.isPlaying,
       isKing: false,
-      currentSongIndex: 0,
-      songs: [
-        {name: 'Song Title 1', URL: 'music.mp3'},
-        {name: 'Song Title 2', URL: 'https://archive.org/download/calexico2006-12-02..flac16/calexico2006-12-02d1t02.mp3'},
-      ]
+      currentSongIndex: this.$store.state.currentSongIndex,
+      songs: this.$store.state.songs,
+      currentSongDuration: "00:00"
     }
   },
   computed: {
     ...mapState(['roomID']),
-    songName: {
-      // getter
-      get() {
-        return this.songs[this.currentSongIndex].name;
-      }
+    activeSong () {
+      return this.songs[this.currentSongIndex]
     }
   },
   methods: {
+    calculateTime(secs) {
+      console.log(secs);
+      const minutes = Math.floor(secs / 60);
+      const seconds = Math.floor(secs % 60);
+      const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+      return `${minutes}:${returnedSeconds}`;
+    },
     togglePlay() {
       console.log('> Play/Pause toggled');
       if (this.isPlaying) {
