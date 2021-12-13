@@ -29,30 +29,31 @@
         </Button>
       </div>
 
-      <input id="progress" class="progress" type="range" value="0" step="1" min="0" max="100"/>
+      <div class="progress">
+        <input id="progress" class="progress-bar" type="range" value="0" step="1" min="0" max="100"/>
+        <div class="time">
+            <span id="current-time">{{ currentTime }}</span>
+            <span id="duration">{{ currentSongDuration }}</span>
+        </div>
+      </div>
 
       <audio ref="audio" id="audio" preload="none" tabindex="0">
         <source v-for="(song, index) in songs" :src="song.URL" :data-track-number="index + 1"/>
       </audio>
-    </div>
 
-    <div class="utility-space">
-      <div class="room-info">
-        <RoomSelector></RoomSelector>
-      </div>
+      <div class="player-utilities">
+        <div class="room-selector">
+          <RoomSelector></RoomSelector>
+        </div>
 
-      <div class="current-time-info">
-        <h4>Current time:</h4>
-        <span id="currentTime">0</span>
-      </div>
-
-      <div class="king-toggle">
-        <Button class="btn btn-king" @click="toggleKing()">
-          <IconBase icon-name="whatever" icon-color="var(--color-lightyellow)">
-            <IconStarEmpty v-if="!this.isKing"></IconStarEmpty>
-            <IconStarFull v-if="this.isKing"></IconStarFull>
-          </IconBase>
-        </Button>
+        <div class="king-toggle">
+          <Button class="btn btn-king" @click="toggleKing()">
+            <IconBase icon-name="King Toggle">
+              <IconStarEmpty v-if="!this.isKing"></IconStarEmpty>
+              <IconStarFull v-if="this.isKing"></IconStarFull>
+            </IconBase>
+          </Button>
+        </div>
       </div>
     </div>
   </div>
@@ -117,16 +118,20 @@ export default {
       } else {
         this.play() // todo, promise/await?
       }
+      this.currentSongDuration = this.calculateTime(this.$refs.audio.duration);
+      console.log('hello from togglePlay():', this.currentSongDuration);
       this.isPlaying = !this.isPlaying
     },
     play() {
       console.log('> Playing');
       this.socket.emit('song:play', {'room': this.roomID})
+      this.$store.dispatch('changePlayState', true)
       this.$refs.audio.play()
     },
     setSong(song) {
       console.log('> Set Song', song);
       this.$refs.audio.setAttribute('src', song.URL); // todo: do I need to call the 'load' method?
+      this.currentSongDuration = this.calculateTime(this.$refs.audio.duration);
       this.socket.emit('song:change', {
         'room': this.roomID,
         'song': song.URL
@@ -135,6 +140,7 @@ export default {
     pause() {
       console.log('> Pausing');
       this.socket.emit('song:pause', {'room': this.roomID})
+      this.$store.dispatch('changePlayState', false)
       this.$refs.audio.pause()
     },
     next() {
@@ -178,9 +184,14 @@ export default {
       }
     });
 
+    this.currentSongDuration = this.calculateTime(this.$refs.audio.currentTime)
+    console.log('hello from mounted():', this.currentSongDuration);
+
     // just for testing
     this.$refs.audio.ontimeupdate = () => {
       console.log(this.$refs.audio.currentTime);
+      this.currentTime = this.calculateTime(this.$refs.audio.currentTime);
+      console.log('hello from audio.ontimeupdate:', this.currentSongDuration);
     };
   },
 }
@@ -189,39 +200,39 @@ export default {
 <style scoped>
 
 .player {
-  min-width: 95vw;
-  background-color: var(--color-white);
-  display: flex;
-  align-items: center;
-  flex-direction: column;
+  padding: var(--spacing-03);
+  max-width: 60rem;
 }
 
 .dashboard {
-  padding: var(--spacing-03) var(--spacing-03);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
   background-color: var(--color-white);
-  width: 100%;
-  max-width: 90vw;
-  border-bottom: 1px solid var(--color-grey);
+  padding: var(--spacing-02) var(--spacing-03);
+  border-radius: 5px;
+  box-shadow: 0 2px 3px var(--color-neutral-90);
 }
 
 /* Music player data (song title) */
-header {
+.current-song {
   text-align: center;
-  margin-bottom: var(--spacing-02);
+  margin-bottom: var(--spacing-01);
 }
 
-header h4 {
-  color: var(--color-darkyellow);
+.current-song h4 {
+  color: var(--color-primary);
   font-size: var(--font-size-s);
 }
 
-header h2 {
+.current-song h2 {
   color: var(--color-text);
   font-size: var(--font-size-l);
 }
 
 /* Player controls section*/
 .control {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -235,7 +246,7 @@ header h2 {
 }
 
 .control .btn.active {
-  color: var(--color-lightyellow);
+  color: var(--color-princeton-orange);
 }
 
 .control .btn-toggle-play {
@@ -247,10 +258,14 @@ header h2 {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--color-darkyellow);
+  background-color: var(--color-primary);
 }
 
 .progress {
+  width: 100%;
+}
+
+.progress-bar {
   width: 100%;
   -webkit-appearance: none;
   height: var(--spacing-03);
@@ -261,19 +276,26 @@ header h2 {
   transition: opacity 0.2s;
 }
 
-.progress::-webkit-slider-thumb {
+.progress-bar::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: var(--spacing-02);
   height: var(--spacing-03);
-  background-color: var(--color-lightblue);
+  background-color: var(--color-primary);
   cursor: pointer;
 }
 
-.utility-space {
+.time {
+  display: flex;
+  justify-content: space-between;
+  color: var(--color-neutral-60);
+}
+
+.player-utilities {
+  width: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
   padding: var(--spacing-04) 0 var(--spacing-04) 0;
 }
 </style>
