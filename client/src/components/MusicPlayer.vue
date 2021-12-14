@@ -30,14 +30,14 @@
       </div>
 
       <div class="progress">
-        <input id="progress" class="progress-bar" type="range" value="0" step="1" min="0" max="100"/>
+        <input id="progress" class="progress-bar" type="range" :value="progressBarPercent" step="1" min="0" max="100"/>
         <div class="time">
-            <span id="current-time">{{ currentTime }}</span>
-            <span id="duration">{{ currentSongDuration }}</span>
+            <span id="current-time">{{ formattedCurrentSongTime }}</span>
+            <span id="duration">{{ formattedCurrentSongDuration }}</span>
         </div>
       </div>
 
-      <audio ref="audio" id="audio" preload="none" tabindex="0">
+      <audio ref="audio" id="audio" preload="auto" tabindex="0">
         <source v-for="(song, index) in songs" :src="song.URL" :data-track-number="index + 1"/>
       </audio>
 
@@ -60,138 +60,77 @@
 </template>
 
 <script>
-import Button from "@/components/Button";
+import RoomSelector from '../components/RoomSelector'
+import Button from '../components/Button'
+import IconBase from '../components/IconBase'
+import { IconBackwards, IconPlay, IconPause, IconStarEmpty, IconStarFull, IconForwards } from '../components/icons'
 
-import IconBase from "@/components/IconBase";
-import IconBackwards from "@/components/icons/IconBackwards";
-import IconPlay from "@/components/icons/IconPlay";
-import IconPause from "@/components/icons/IconPause";
-import IconForwards from "@/components/icons/IconForwards";
-import IconStarEmpty from "@/components/icons/IconEmpty";
-import IconStarFull from "@/components/icons/IconStarFull";
-
-import RoomSelector from '../components/RoomSelector';
-import {mapState} from "vuex";
+// Grabbing utility functions from vuex (the global variable store)
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'MusicPlayer',
-  inject: ['socket'],
-  components: {
-    IconStarEmpty,
-    IconStarFull,
-    IconForwards,
-    IconPlay,
-    IconPause,
-    IconBackwards,
-    IconBase,
-    Button,
-    RoomSelector
-  },
+  components: { IconStarEmpty, IconStarFull, IconForwards, IconPlay, IconPause, IconBackwards, IconBase, Button, RoomSelector },
   data() {
     return {
-      currentTime: "00:00",
-      isPlaying: this.$store.state.isPlaying,
-      isKing: false,
-      currentSongIndex: this.$store.state.currentSongIndex,
-      songs: this.$store.state.songs,
-      currentSongDuration: "00:00"
+      currentSongTime: 0,
+      currentSongDuration: 0,
     }
   },
   computed: {
-    ...mapState(['roomID']),
-    activeSong () {
-      return this.songs[this.currentSongIndex]
+    // Grabbing global state variables from the vuex store
+    ...mapState(['roomID', 'isPlaying', 'currentSongIndex', 'songs', 'isKing']),
+    formattedCurrentSongTime() {
+      return new Date(this.currentSongTime * 1000).toISOString().substr(14, 5)
+    },
+    formattedCurrentSongDuration() {
+      return new Date(this.currentSongDuration * 1000).toISOString().substr(14, 5)
+    },
+    progressBarPercent() {
+      return (this.currentSongTime / this.currentSongDuration) * 100
     }
   },
-  methods: {
-    calculateTime(secs) {
-      console.log(secs);
-      const minutes = Math.floor(secs / 60);
-      const seconds = Math.floor(secs % 60);
-      const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
-      return `${minutes}:${returnedSeconds}`;
+  // Watchers 'watch' variables, and are named after the variables they are watching. If the variable changes, the function is invoked
+  watch: {
+    isPlaying(val) {
+      val === true ? this.$refs.audio.play() : this.$refs.audio.pause()
     },
+    currentSongIndex(val) {
+      this.$refs.audio.setAttribute('src', this.songs[val].URL);
+    },
+  },
+  methods: {
+    ...mapActions(['changeSong', 'changePlayState']), // Grabbing actions from vuex store to make API calls and have the new state reflected globally
     togglePlay() {
       console.log('> Play/Pause toggled');
-      if (this.isPlaying) {
-        this.pause()
-      } else {
-        this.play() // todo, promise/await?
-      }
-      this.currentSongDuration = this.calculateTime(this.$refs.audio.duration);
-      console.log('hello from togglePlay():', this.currentSongDuration);
-      this.isPlaying = !this.isPlaying
-    },
-    play() {
-      console.log('> Playing');
-      this.socket.emit('song:play', {'room': this.roomID})
-      this.$store.dispatch('changePlayState', true)
-      this.$refs.audio.play()
-    },
-    setSong(song) {
-      console.log('> Set Song', song);
-      this.$refs.audio.setAttribute('src', song.URL); // todo: do I need to call the 'load' method?
-      this.currentSongDuration = this.calculateTime(this.$refs.audio.duration);
-      this.socket.emit('song:change', {
-        'room': this.roomID,
-        'song': song.URL
-      });
-    },
-    pause() {
-      console.log('> Pausing');
-      this.socket.emit('song:pause', {'room': this.roomID})
-      this.$store.dispatch('changePlayState', false)
-      this.$refs.audio.pause()
+      this.changePlayState(!this.isPlaying)
     },
     next() {
       console.log('> Next');
-      this.currentSongIndex += 1
-      this.setSong(this.songs[this.currentSongIndex])
-      if (this.isPlaying) {
-        this.play()
-      }
+      if (this.currentSongIndex >= this.songs.length - 1) return // Reached end of playlist
+      this.changeSong(this.currentSongIndex + 1)
     },
     back() {
       console.log('> Back');
-      this.currentSongIndex -= 1
-      this.setSong(this.songs[this.currentSongIndex])
-      if (this.isPlaying) {
-        this.play()
-      }
+      if (this.currentSongIndex <= 0) return // Reached beginning of playlist, restart song
+      this.changeSong(this.currentSongIndex - 1)
     },
     toggleKing() {
       this.isKing = !this.isKing;
-      console.log('> Toggling isKing to ', this.isKing);
+      console.log('< Toggled isKing to ', this.isKing);
     }
   },
   mounted() {
     console.log("Created listeners");
 
-    this.socket.on('broadcasted:song:play', (msg) => {
-      console.log("Song play notification, msg");
-      this.$refs.audio.play()
-    });
-    this.socket.on('broadcasted:song:pause', (msg) => {
-      console.log("Song pause notification, msg");
-      this.$refs.audio.pause()
-    });
-    this.socket.on('broadcasted:song:change', (song) => {
-      console.log("Song change notification", song);
-      this.$refs.audio.setAttribute('src', song);
-      this.$refs.audio.load()
-      if (this.isPlaying) {
-        this.$refs.audio.play()
-      }
-    });
-
-    this.currentSongDuration = this.calculateTime(this.$refs.audio.currentTime)
-    console.log('hello from mounted():', this.currentSongDuration);
+    // Setting initial song duration, wait for the metadata to load from the song
+    this.$refs.audio.onloadedmetadata = () => {
+      this.currentSongDuration = this.$refs.audio.duration
+    };
 
     // just for testing
     this.$refs.audio.ontimeupdate = () => {
-      console.log(this.$refs.audio.currentTime);
-      this.currentTime = this.calculateTime(this.$refs.audio.currentTime);
-      console.log('hello from audio.ontimeupdate:', this.currentSongDuration);
+      this.currentSongTime = this.$refs.audio.currentTime
     };
   },
 }
