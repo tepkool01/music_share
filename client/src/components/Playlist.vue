@@ -1,6 +1,6 @@
 <template>
   <div class="playlist">
-      <div v-for="song in this.$store.state.songs" class="song">
+      <div v-for="song in songs" class="song">
         <div class="thumb">
         </div>
         <div class="body">
@@ -20,18 +20,13 @@
 </template>
 
 <script>
-import MusicPlayer from "@/components/MusicPlayer";
+import { mapState } from 'vuex'
 
 export default {
-name: "Playlist",
-  components: {
-    MusicPlayer
+  name: "Playlist",
+  computed: {
+    ...mapState(['songs'])
   },
-  data() {
-    return {
-      songs: Array
-    }
-  }
 }
 </script>
 
