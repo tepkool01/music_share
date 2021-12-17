@@ -103,21 +103,21 @@ export default {
     ...mapActions(['changeSong', 'changePlayState', 'changeKing']), // Grabbing actions from vuex store to make API calls and have the new state reflected globally
     togglePlay() {
       console.log('> Play/Pause toggled');
-      this.changePlayState(!this.isPlaying)
+      this.changePlayState({ broadcasted: false, playState: !this.isPlaying })
     },
     next() {
       console.log('> Next');
       if (this.currentSongIndex >= this.songs.length - 1) return // Reached end of playlist
-      this.changeSong(this.currentSongIndex + 1)
+      this.changeSong({ broadcasted: false, songIndex: this.currentSongIndex + 1 })
     },
     back() {
       console.log('> Back');
       if (this.currentSongIndex <= 0) return // Reached beginning of playlist, restart song
-      this.changeSong(this.currentSongIndex - 1)
+      this.changeSong({ broadcasted: false, songIndex: this.currentSongIndex - 1 })
     },
     toggleKing() {
       console.log('> Toggling isKing to ', !this.isKing);
-      this.changeKing({ broadcastReceived: false, isKing: !this.isKing }) // broadcastReceived says this wasn't from another person, they are manually triggering this themselves
+      this.changeKing({ broadcasted: false, isKing: !this.isKing })
     }
   },
   mounted() {

@@ -21,15 +21,15 @@ export default createStore({
 	},
 	// Actions are ASYNCHRONOUS
 	actions: {
-		changeRoom ({ commit }, roomID) {
+		changeRoom ({ commit }, payload) {
 			// todo: make API call to notify of person leaving?
-			commit('SET_ROOM', roomID)
+			commit('SET_ROOM', payload)
 		},
-		changePlayState ({ commit }, isPlaying) {
-			commit('SET_PLAY_STATE', isPlaying)
+		changePlayState ({ commit }, payload) {
+			commit('SET_PLAY_STATE', payload)
 		},
-		changeSong ({ commit }, songIndex) {
-			commit('SET_CURRENT_SONG_INDEX', songIndex)
+		changeSong ({ commit }, payload) {
+			commit('SET_CURRENT_SONG_INDEX', payload)
 		},
 		changeKing ({ commit }, payload) {
 			commit('SET_KING', payload)
@@ -37,9 +37,9 @@ export default createStore({
 	},
 	// Mutations are SYNCHRONOUS
 	mutations: {
-		SET_ROOM: (state, ID) => state.roomID = ID,
-		SET_PLAY_STATE: (state, newPlayState) => state.isPlaying = newPlayState,
-		SET_CURRENT_SONG_INDEX: (state, songIndex) => state.currentSongIndex = songIndex,
+		SET_ROOM: (state, payload) => state.roomID = payload,
+		SET_PLAY_STATE: (state, payload) => state.isPlaying = payload.playState,
+		SET_CURRENT_SONG_INDEX: (state, payload) => state.currentSongIndex = payload.songIndex,
 		SET_KING: (state, payload) => state.isKing = payload.isKing,
 	},
 
