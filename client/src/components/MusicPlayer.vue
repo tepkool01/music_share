@@ -30,7 +30,7 @@
       </div>
 
       <div class="progress">
-        <input id="progress" class="progress-bar" type="range" :value="progressBarPercent" step="1" min="0" max="100"/>
+        <input id="progress" class="progress-bar" type="range" @click="seek()" v-model="this.currentSongTime" :disabled="!this.isKing" step="1" min="0" :max="this.currentSongDuration"/>
         <div class="time">
             <span id="current-time">{{ formattedCurrentSongTime }}</span>
             <span id="duration">{{ formattedCurrentSongDuration }}</span>
@@ -73,30 +73,39 @@ export default {
   components: { IconStarEmpty, IconStarFull, IconForwards, IconPlay, IconPause, IconBackwards, IconBase, Button, RoomSelector },
   data() {
     return {
-      currentSongTime: 0,
       currentSongDuration: 0,
+      // loop: false, // todo
     }
   },
   computed: {
     // Grabbing global state variables from the vuex store
     ...mapState(['roomID', 'isPlaying', 'currentSongIndex', 'songs', 'isKing']),
+    // Using currentSongTime as a global state variable for various sync'ing options
+    currentSongTime: {
+      get() { return this.$store.state.currentSongTime },
+      set(value) {this.$store.commit('SET_SONG_TIME', value)}
+    },
     formattedCurrentSongTime() {
       return new Date(this.currentSongTime * 1000).toISOString().substr(14, 5)
     },
     formattedCurrentSongDuration() {
       return new Date(this.currentSongDuration * 1000).toISOString().substr(14, 5)
     },
-    progressBarPercent() {
-      return (this.currentSongTime / this.currentSongDuration) * 100
-    }
   },
   // Watchers 'watch' variables, and are named after the variables they are watching. If the variable changes, the function is invoked
   watch: {
+    currentSongTime(val) {
+      // detect a shift in the alerted time and actual time, from either a seek operation
+      if (Math.abs(this.$refs.audio.currentTime - val) >= 1) {
+        this.$refs.audio.currentTime = val
+      }
+    },
     isPlaying(val) {
       val === true ? this.$refs.audio.play() : this.$refs.audio.pause()
     },
     currentSongIndex(val) {
       this.$refs.audio.setAttribute('src', this.songs[val].URL)
+      this.$refs.audio.load()
       // if the song is changed and they were already in a playing state, automatically play the song
       if (this.isPlaying === true) {
         this.$refs.audio.play()
@@ -104,7 +113,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['changeSong', 'changePlayState', 'changeKing']), // Grabbing actions from vuex store to make API calls and have the new state reflected globally
+    ...mapActions(['changeSong', 'changePlayState', 'changeKing', 'seekSong']), // Grabbing actions from vuex store to make API calls and have the new state reflected globally
     togglePlay() {
       console.log('> Play/Pause toggled');
       this.changePlayState({ broadcasted: false, playState: !this.isPlaying })
@@ -122,6 +131,10 @@ export default {
     toggleKing() {
       console.log('> Toggling isKing to ', !this.isKing);
       this.changeKing({ broadcasted: false, isKing: !this.isKing })
+    },
+    seek() {
+      console.log('> Seek', this.currentSongTime)
+      this.seekSong(this.currentSongTime)
     }
   },
   mounted() {
@@ -131,6 +144,9 @@ export default {
     this.$refs.audio.onloadedmetadata = () => {
       this.currentSongDuration = this.$refs.audio.duration
     };
+
+    // Song has ended, go to next song
+    this.$refs.audio.onended = () => this.next()
 
     // just for testing
     this.$refs.audio.ontimeupdate = () => {

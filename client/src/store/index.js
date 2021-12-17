@@ -11,6 +11,7 @@ export default createStore({
 		return {
 			roomID: 0,
 			currentSongIndex: 0,
+			currentSongTime: 0,
 			songs: [
 				{name: 'It\'s Raining Tacos', URL: 'music.mp3'},
 				{name: 'The Ultimate Showdown', URL: 'https://archive.org/download/calexico2006-12-02..flac16/calexico2006-12-02d1t02.mp3'},
@@ -34,6 +35,9 @@ export default createStore({
 		changeKing ({ commit }, payload) {
 			commit('SET_KING', payload)
 		},
+		seekSong ({ commit }, payload) {
+			commit('SEEK_SONG', payload)
+		},
 	},
 	// Mutations are SYNCHRONOUS
 	mutations: {
@@ -41,6 +45,8 @@ export default createStore({
 		SET_PLAY_STATE: (state, payload) => state.isPlaying = payload.playState,
 		SET_CURRENT_SONG_INDEX: (state, payload) => state.currentSongIndex = payload.songIndex,
 		SET_KING: (state, payload) => state.isKing = payload.isKing,
+		SET_SONG_TIME: (state, payload) => state.currentSongTime = payload, // i know these are duplicates, one is for general song time updates, SEEK song is a deliberate action
+		SEEK_SONG: (state, payload) => state.currentSongTime = payload,
 	},
 
 	strict: debug,

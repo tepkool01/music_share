@@ -20,6 +20,10 @@ export default function createWebSocketPlugin (socket) {
       console.log("NOTIFICATION: Change song", songIndex);
       store.commit('SET_CURRENT_SONG_INDEX', { broadcasted: true, songIndex: songIndex })
     });
+    socket.on('broadcasted:song:seek', (seekTime) => {
+      console.log("NOTIFICATION: Seek song", seekTime)
+      store.commit('SET_SONG_TIME', seekTime)
+    })
     socket.on('broadcasted:king:change', (msg) => { // notified that someone else took control
       console.log("NOTIFICATION: Change ownership");
       store.commit('SET_KING', { broadcasted: true, isKing: false })
@@ -38,16 +42,16 @@ export default function createWebSocketPlugin (socket) {
       // Toggling the playing state, notify the listeners
       if (mutation.type === 'SET_PLAY_STATE') {
         if (mutation.payload.playState === true) {
-          socket.emit('song:play', {'room': store.state.roomID})
+          socket.emit('song:play', {roomID: store.state.roomID})
         } else {
-          socket.emit('song:pause', {'room': store.state.roomID})
+          socket.emit('song:pause', {roomID: store.state.roomID})
         }
       }
       // User changes the song, notify all listeners of new index
       if (mutation.type === 'SET_CURRENT_SONG_INDEX') {
         socket.emit('song:change', {
-          'room': store.state.roomID,
-          'song': mutation.payload.songIndex,
+          roomID: store.state.roomID,
+          song: mutation.payload.songIndex,
         });
       }
       // User changes their room
@@ -59,6 +63,13 @@ export default function createWebSocketPlugin (socket) {
         socket.emit('king:change', {
           roomID: store.state.roomID,
           isKing: mutation.payload.isKing,
+        })
+      }
+      // User uses the seek option on the song
+      if (mutation.type === 'SEEK_SONG') {
+        socket.emit('song:seek', {
+          roomID: store.state.roomID,
+          songTime: mutation.payload,
         })
       }
     })

@@ -6,9 +6,12 @@
   "author": "Michael Young <mvy1221@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "serve": "node src/musicServer.js"
+    "serve": "nodemon src/musicServer.js"
   },
   "dependencies": {
     "socket.io": "^4.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
   }
 }
