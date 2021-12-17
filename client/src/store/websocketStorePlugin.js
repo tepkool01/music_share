@@ -31,6 +31,10 @@ export default function createWebSocketPlugin (socket) {
           'song': mutation.payload
         });
       }
+      // User changes their room
+      if (mutation.type === 'SET_ROOM') {
+        socket.emit('room:change', mutation.payload)
+      }
     })
   }
 }

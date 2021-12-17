@@ -14,7 +14,6 @@ import { mapState } from "vuex";
 
 export default {
   name: 'RoomSelector',
-  inject: ['socket'],
   data() {
     return {
       room: 0
@@ -26,7 +25,6 @@ export default {
   methods: {
     roomChange() {
       console.log("> roomChange", this.room)
-      this.socket.emit('room:change', this.room);
       this.$store.dispatch('changeRoom', this.room)
     }
   },
