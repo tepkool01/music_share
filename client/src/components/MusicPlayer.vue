@@ -96,7 +96,11 @@ export default {
       val === true ? this.$refs.audio.play() : this.$refs.audio.pause()
     },
     currentSongIndex(val) {
-      this.$refs.audio.setAttribute('src', this.songs[val].URL);
+      this.$refs.audio.setAttribute('src', this.songs[val].URL)
+      // if the song is changed and they were already in a playing state, automatically play the song
+      if (this.isPlaying === true) {
+        this.$refs.audio.play()
+      }
     },
   },
   methods: {
