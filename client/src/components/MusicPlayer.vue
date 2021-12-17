@@ -9,20 +9,20 @@
       </div>
 
       <div class="control">
-        <Button class="btn btn-back" @click="back()">
+        <Button class="btn btn-back" @click="back()" :disabled="!this.isKing">
           <IconBase icon-name="backwards">
             <IconBackwards></IconBackwards>
           </IconBase>
         </Button>
 
-        <Button class="btn btn-toggle-play" @click="togglePlay()">
+        <Button class="btn btn-toggle-play" @click="togglePlay()" :disabled="!this.isKing">
           <IconBase icon-name="play" icon-color="var(--color-white)">
             <IconPlay v-if="!this.isPlaying"></IconPlay>
             <IconPause v-if="this.isPlaying"></IconPause>
           </IconBase>
         </Button>
 
-        <Button class="btn btn-next" @click="next()">
+        <Button class="btn btn-next" @click="next()" :disabled="!this.isKing">
           <IconBase icon-name="forwards">
             <IconForwards></IconForwards>
           </IconBase>
@@ -100,7 +100,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['changeSong', 'changePlayState']), // Grabbing actions from vuex store to make API calls and have the new state reflected globally
+    ...mapActions(['changeSong', 'changePlayState', 'changeKing']), // Grabbing actions from vuex store to make API calls and have the new state reflected globally
     togglePlay() {
       console.log('> Play/Pause toggled');
       this.changePlayState(!this.isPlaying)
@@ -116,8 +116,8 @@ export default {
       this.changeSong(this.currentSongIndex - 1)
     },
     toggleKing() {
-      this.isKing = !this.isKing;
-      console.log('< Toggled isKing to ', this.isKing);
+      console.log('> Toggling isKing to ', !this.isKing);
+      this.changeKing({ broadcastReceived: false, isKing: !this.isKing }) // broadcastReceived says this wasn't from another person, they are manually triggering this themselves
     }
   },
   mounted() {

@@ -30,13 +30,17 @@ export default createStore({
 		},
 		changeSong ({ commit }, songIndex) {
 			commit('SET_CURRENT_SONG_INDEX', songIndex)
-		}
+		},
+		changeKing ({ commit }, payload) {
+			commit('SET_KING', payload)
+		},
 	},
 	// Mutations are SYNCHRONOUS
 	mutations: {
 		SET_ROOM: (state, ID) => state.roomID = ID,
 		SET_PLAY_STATE: (state, newPlayState) => state.isPlaying = newPlayState,
 		SET_CURRENT_SONG_INDEX: (state, songIndex) => state.currentSongIndex = songIndex,
+		SET_KING: (state, payload) => state.isKing = payload.isKing,
 	},
 
 	strict: debug,
