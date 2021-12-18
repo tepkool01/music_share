@@ -15,6 +15,7 @@ export default createStore({
 			songs: [
 				{name: 'It\'s Raining Tacos', URL: 'music.mp3'},
 				{name: 'The Ultimate Showdown', URL: 'https://archive.org/download/calexico2006-12-02..flac16/calexico2006-12-02d1t02.mp3'},
+				{name: 'Dragostea din tei', URL: '9-03 Dragostea din tei.mp3'},
 			],
 			isPlaying: false,
 			isKing: false,
