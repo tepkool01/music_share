@@ -15,9 +15,14 @@ module.exports = (io, socket) => {
 		console.log(">>seekSong - seeking to:" + JSON.stringify(payload));
 		socket.broadcast.to(payload.roomID).emit('broadcasted:song:seek', payload.songTime)
 	}
+	const syncSong = (payload) => {
+		console.log(">>syncSong - syncing to:" + JSON.stringify(payload));
+		socket.broadcast.to(payload.roomID).emit('broadcasted:song:sync', payload)
+	}
 
 	socket.on("song:change", changeSong);
 	socket.on("song:pause", pauseSong);
 	socket.on("song:play", playSong);
 	socket.on("song:seek", seekSong);
+	socket.on("song:sync", syncSong);
 };

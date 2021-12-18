@@ -113,7 +113,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['changeSong', 'changePlayState', 'changeKing', 'seekSong']), // Grabbing actions from vuex store to make API calls and have the new state reflected globally
+    ...mapActions(['changeSong', 'changePlayState', 'changeKing', 'seekSong', 'syncSong']), // Grabbing actions from vuex store to make API calls and have the new state reflected globally
     togglePlay() {
       console.log('> Play/Pause toggled');
       this.changePlayState({ broadcasted: false, playState: !this.isPlaying })
@@ -148,8 +148,15 @@ export default {
     // Song has ended, go to next song
     this.$refs.audio.onended = () => this.next()
 
-    // just for testing
+    // Progress bar updates and sending out synchronization heartbeats
+    let tick = 1
     this.$refs.audio.ontimeupdate = () => {
+      if (this.isKing && tick % 25 === 0) {
+        console.log("SYNC!!!")
+        this.syncSong({ broadcasted: false, isSync: false }) // false means to say sync hasn't been checked
+        tick = 0
+      }
+      tick++
       this.currentSongTime = this.$refs.audio.currentTime
     };
   },

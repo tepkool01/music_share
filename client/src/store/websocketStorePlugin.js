@@ -5,6 +5,8 @@
 // 3. Users receive the event, which disables their king status (updates their state)
 // To prevent the audience from triggering their own event in an infinite loop, we must have 'broadcasted' set to true or false
 // to determine where the message is coming from
+const SONG_DRIFT = 5 // max amount of seconds allowed for song 'drift' between the king and the listeners
+
 export default function createWebSocketPlugin (socket) {
   return (store) => {
     // Receiving events from the DJ
@@ -27,6 +29,18 @@ export default function createWebSocketPlugin (socket) {
     socket.on('broadcasted:king:change', (msg) => { // notified that someone else took control
       console.log("NOTIFICATION: Change ownership");
       store.commit('SET_KING', { broadcasted: true, isKing: false })
+    });
+    socket.on('broadcasted:song:sync', (payload) => { // notified of a sync event from the king to match up songs and times
+      console.log("NOTIFICATION: Verifying music synced", payload);
+      if (payload.songIndex !== store.state.currentSongIndex) {
+        console.log("SONG INDEX WRONG")
+        store.commit('SET_CURRENT_SONG_INDEX', { broadcasted: true, songIndex: payload.songIndex })
+      }
+      if (Math.abs(payload.songTime - store.state.currentSongTime) > SONG_DRIFT) {
+        console.log("SONG DRIFT DETECTED")
+        store.commit('SET_SONG_TIME', payload.songTime)
+      }
+      store.commit('SYNC_SONG', { broadcasted: true, isSync: true })
     });
     // todo does this work?
     socket.on('disconnect', () => {
@@ -70,6 +84,15 @@ export default function createWebSocketPlugin (socket) {
         socket.emit('song:seek', {
           roomID: store.state.roomID,
           songTime: mutation.payload,
+        })
+      }
+      // Routine checks to see if the listener is on the same song/same song time as the king
+      if (mutation.type === 'SYNC_SONG') {
+        socket.emit('song:sync', {
+          test: 'asdf',
+          roomID: store.state.roomID,
+          songTime: store.state.currentSongTime,
+          songIndex: store.state.currentSongIndex,
         })
       }
     })

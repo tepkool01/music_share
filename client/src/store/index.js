@@ -18,6 +18,7 @@ export default createStore({
 			],
 			isPlaying: false,
 			isKing: false,
+			inSync: true,
 		}
 	},
 	// Actions are ASYNCHRONOUS
@@ -38,6 +39,9 @@ export default createStore({
 		seekSong ({ commit }, payload) {
 			commit('SEEK_SONG', payload)
 		},
+		syncSong ({ commit }, payload) {
+			commit('SYNC_SONG', payload)
+		}
 	},
 	// Mutations are SYNCHRONOUS
 	mutations: {
@@ -47,6 +51,7 @@ export default createStore({
 		SET_KING: (state, payload) => state.isKing = payload.isKing,
 		SET_SONG_TIME: (state, payload) => state.currentSongTime = payload, // i know these are duplicates, one is for general song time updates, SEEK song is a deliberate action
 		SEEK_SONG: (state, payload) => state.currentSongTime = payload,
+		SYNC_SONG: (state, payload) => state.inSync = payload.isSync,
 	},
 
 	strict: debug,
