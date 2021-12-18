@@ -42,6 +42,10 @@ export default function createWebSocketPlugin (socket) {
       }
       store.commit('SYNC_SONG', { broadcasted: true, isSync: true })
     });
+    socket.on('broadcasted:playlist:change', (msg) => { // notified that someone else took control
+      console.log("NOTIFICATION: Change ownership");
+      store.commit('SET_KING', { broadcasted: true, isKing: false })
+    });
     // todo does this work?
     socket.on('disconnect', () => {
       console.log("Disconnect")
@@ -92,6 +96,13 @@ export default function createWebSocketPlugin (socket) {
           roomID: store.state.roomID,
           songTime: store.state.currentSongTime,
           songIndex: store.state.currentSongIndex,
+        })
+      }
+      // Routine checks to see if the listener is on the same song/same song time as the king
+      if (mutation.type === 'SET_PLAYLIST') {
+        socket.emit('playlist:change', {
+          roomID: store.state.roomID,
+          playlist: store.state.currentSongTime,
         })
       }
     })

@@ -1,5 +1,5 @@
 <template>
-  <div class="playlist">
+  <div ref="playlist" class="playlist">
       <div v-for="(song, index) in songs" class="song" @click="selectSong(index)">
         <div class="thumb">
         </div>
@@ -21,6 +21,10 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import Sortable from 'sortablejs'
+
+// var el = document.getElementById('items');
+// var sortable = Sortable.create(el);
 
 export default {
   name: "Playlist",
@@ -28,13 +32,30 @@ export default {
     ...mapState(['songs', 'isKing'])
   },
   methods: {
-    ...mapActions(['changeSong']),
+    ...mapActions(['changeSong', 'updatePlaylist']),
     selectSong(songIndex) {
       console.log(">>selectSong()", songIndex)
       if (this.isKing === false) return
       this.changeSong({ broadcasted: false, songIndex: songIndex })
     }
   },
+  // when the component is ready, we are going to create a sortable list
+  mounted() {
+    console.log(this.$refs.playlist.id)
+    const sortable = new Sortable(this.$refs.playlist, {
+      onEnd: (draggedItem) => {
+        let songs = this.songs
+        let replacedValue = this.songs[draggedItem.newIndex]
+        songs[draggedItem.newIndex] = songs[draggedItem.oldIndex]
+        songs[draggedItem.oldIndex] = replacedValue
+        this.updatePlaylist(songs)
+        console.log(draggedItem)
+        console.log("old", draggedItem.oldIndex)
+        console.log("new", draggedItem.newIndex)
+      }
+    })
+
+  }
 }
 </script>
 
