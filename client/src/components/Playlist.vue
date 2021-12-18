@@ -1,6 +1,6 @@
 <template>
   <div class="playlist">
-      <div v-for="song in songs" class="song">
+      <div v-for="(song, index) in songs" class="song" @click="selectSong(index)">
         <div class="thumb">
         </div>
         <div class="body">
@@ -20,12 +20,20 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: "Playlist",
   computed: {
-    ...mapState(['songs'])
+    ...mapState(['songs', 'isKing'])
+  },
+  methods: {
+    ...mapActions(['changeSong']),
+    selectSong(songIndex) {
+      console.log(">>selectSong()", songIndex)
+      if (this.isKing === false) return
+      this.changeSong({ broadcasted: false, songIndex: songIndex })
+    }
   },
 }
 </script>

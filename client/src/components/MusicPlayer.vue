@@ -95,7 +95,7 @@ export default {
   // Watchers 'watch' variables, and are named after the variables they are watching. If the variable changes, the function is invoked
   watch: {
     currentSongTime(val) {
-      // detect a shift in the alerted time and actual time, from either a seek operation
+      // detect a shift in the alerted time and actual time, from a seek option
       if (Math.abs(this.$refs.audio.currentTime - val) >= 1) {
         this.$refs.audio.currentTime = val
       }

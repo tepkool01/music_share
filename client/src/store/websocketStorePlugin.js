@@ -89,7 +89,6 @@ export default function createWebSocketPlugin (socket) {
       // Routine checks to see if the listener is on the same song/same song time as the king
       if (mutation.type === 'SYNC_SONG') {
         socket.emit('song:sync', {
-          test: 'asdf',
           roomID: store.state.roomID,
           songTime: store.state.currentSongTime,
           songIndex: store.state.currentSongIndex,
